@@ -126,8 +126,10 @@ public class ScreenGame extends ScreenBase {
 		Image backgroudImage = new Image(Assets.txGameBackground);
 
 		// Create text labels
-		scoreText = new ActorText("Score: " + score);
-		scoreText.setPosition(624, 400);
+		scoreText = new ActorText(String.valueOf(score));
+		scoreText.setPosition(
+				GameConstants.SCREEN_SIZE_X - Assets.fontFoo.getXHeight() * 8,
+				GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
 
 		// Create fx pool actor
 		actorFx = new ActorFx();
@@ -153,7 +155,7 @@ public class ScreenGame extends ScreenBase {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
 				// Create random bubble
 				ActorBubble aBubble = new ActorBubble(
-						random.nextInt(Assets.BUBBLE_TYPES));
+						random.nextInt(GameConstants.BUBBLE_TYPES));
 				aBubble.setActorTable(i, j);
 				// Add bubble to gamefield
 				gameField[i][j] = aBubble;
@@ -163,7 +165,7 @@ public class ScreenGame extends ScreenBase {
 			}
 		}
 
-		scoreText.setTextValue("Score: " + score);
+		// scoreText.setTextValue(String.valueOf(score));
 
 	}
 
@@ -273,7 +275,7 @@ public class ScreenGame extends ScreenBase {
 
 		ActorTable[] firedTable = new ActorTable[FIELD_SIZE_X * FIELD_SIZE_Y];
 		int firedIndex = 0;
-		
+
 		// Find 3 in a row
 		for (int i = 0; i <= FIELD_SIZE_X - GameConstants.GOAL; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
@@ -338,10 +340,10 @@ public class ScreenGame extends ScreenBase {
 				int jj = firedTable[k].j;
 				if (!gameField[ii][jj].isFired())
 					gameField[ii][jj].setFired();
-				score += 10;
+				score += GameConstants.SCORE_INCREMENT;
 			}
 			Assets.sfxImpact.play();
-			scoreText.setTextValue("Score: " + score);
+			scoreText.setTextValue(String.valueOf(score));
 		}
 
 		return profit;

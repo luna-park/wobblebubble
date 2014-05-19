@@ -49,7 +49,7 @@ public class ActorBubble extends Actor {
 		//setPosition(getX(), getY() - 1800);
 				
 		Random random = new Random();
-		bubbleType = random.nextInt(Assets.BUBBLE_TYPES);
+		bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);
 	}
 
 	public void clearFired() {
