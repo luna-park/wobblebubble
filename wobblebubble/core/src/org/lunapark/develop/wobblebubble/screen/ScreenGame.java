@@ -59,7 +59,7 @@ public class ScreenGame extends ScreenBase {
 	}
 
 	// Game variables
-	private boolean allowCheck = true, allowFling = true;
+	private boolean allowCheck = true, allowFling = true, startTheGame = false;
 
 	// Effects
 	ActorFx actorFx;
@@ -94,6 +94,7 @@ public class ScreenGame extends ScreenBase {
 				// + aBubble.getBubbleType());
 				// aBubble.setFired();
 				// deleteBubble((ActorBubble) event.getListenerActor());
+				// bigBoom();
 
 			}
 
@@ -101,6 +102,7 @@ public class ScreenGame extends ScreenBase {
 			public void fling(InputEvent event, float velocityX,
 					float velocityY, int button) {
 				// super.fling(event, velocityX, velocityY, button);
+				startTheGame = true;
 				ActorBubble a = (ActorBubble) event.getListenerActor();
 
 				if (Math.abs(velocityX) > Math.abs(velocityY)) {
@@ -147,6 +149,18 @@ public class ScreenGame extends ScreenBase {
 	}
 
 	/**
+	 * Boom all bubbles
+	 */
+	private void bigBoom() {
+		for (int i = 0; i < FIELD_SIZE_X; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y; j++) {
+
+				gameField[i][j].setFired();
+			}
+		}
+	}
+
+	/**
 	 * Create game field
 	 */
 	private void createField() {
@@ -173,7 +187,33 @@ public class ScreenGame extends ScreenBase {
 	 * Check for blank space
 	 */
 	private void checkSpaces() {
+		if (allowCheck && allowFling) {
+			if (!checkMotion() && allowCheck && allowFling) {
+				System.out.println("Нет ходов");
+				// XXX
+				Timer.schedule(new Task() {
+					@Override
+					public void run() {
+						bigBoom();
+					}
+				}, GameConstants.MOVE_DURATION * 2);
+
+			}
+		}
+
 		if (allowCheck) {
+
+			if (!checkMotion()) {
+				System.out.println("Нет ходов");
+				// XXX
+				Timer.schedule(new Task() {
+					@Override
+					public void run() {
+						bigBoom();
+					}
+				}, GameConstants.MOVE_DURATION * 2);
+
+			}
 
 			for (int i = 0; i < FIELD_SIZE_X; i++) {
 
@@ -210,7 +250,7 @@ public class ScreenGame extends ScreenBase {
 					 */
 					// Duplicate links
 					final ActorBubble[] duplicate = new ActorBubble[FIELD_SIZE_Y];
-					// FIXME Move graphics
+					// Move graphics
 					// for (int j = FIELD_SIZE_Y - 1; j >= 0; j--) {
 					for (int j = 0; j < FIELD_SIZE_Y; j++) {
 						int jj = bubblesIndexes[j];
@@ -338,15 +378,234 @@ public class ScreenGame extends ScreenBase {
 			for (int k = 0; k < firedIndex; k++) {
 				int ii = firedTable[k].i;
 				int jj = firedTable[k].j;
-				if (!gameField[ii][jj].isFired())
+				if (!gameField[ii][jj].isFired()) {
 					gameField[ii][jj].setFired();
-				score += GameConstants.SCORE_INCREMENT;
+				}
+
 			}
+
+			scoreAdd(firedIndex * 50 + firedIndex * 10);
+
 			Assets.sfxImpact.play();
-			scoreText.setTextValue(String.valueOf(score));
+
 		}
 
 		return profit;
+	}
+
+	/**
+	 * Add score and display
+	 * 
+	 * @param increment
+	 */
+	public void scoreAdd(int increment) {
+		// Game started, score added
+		if (startTheGame)
+			score += increment;
+		scoreText.setTextValue(String.valueOf(score));
+	}
+
+	/**
+	 * TODO Movement available?
+	 * 
+	 * @return
+	 */
+	private boolean checkMotion() {
+
+		int bubble1;
+		int bubble2;
+		int bubble3;
+		// Situation A1
+		// *.*
+		// .*.
+		for (int i = 0; i < FIELD_SIZE_X - 2; i++) {
+			for (int j = 1; j < FIELD_SIZE_Y; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j - 1].getBubbleType();
+				bubble3 = gameField[i + 2][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation A1 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j - 1].getBubbleType();
+				bubble2 = gameField[i + 1][j].getBubbleType();
+				bubble3 = gameField[i + 2][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation B1 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j].getBubbleType();
+				bubble3 = gameField[i + 2][j - 1].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation C1 detected");
+					return true;
+				}
+			}
+		}
+
+		// Situation A2
+		// .*.
+		// *.*
+		for (int i = 0; i < FIELD_SIZE_X - 2; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y - 1; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j + 1].getBubbleType();
+				bubble3 = gameField[i + 2][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation A2 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j].getBubbleType();
+				bubble3 = gameField[i + 2][j + 1].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation B2 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j + 1].getBubbleType();
+				bubble2 = gameField[i + 1][j].getBubbleType();
+				bubble3 = gameField[i + 2][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation C2 detected");
+					return true;
+				}
+			}
+		}
+
+		// Situation A3
+		// .*
+		// *.
+		// .*
+		for (int i = 1; i < FIELD_SIZE_X; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y - 2; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i - 1][j + 1].getBubbleType();
+				bubble3 = gameField[i][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation A3 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i - 1][j].getBubbleType();
+				bubble2 = gameField[i][j + 1].getBubbleType();
+				bubble3 = gameField[i][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation B3 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i][j + 1].getBubbleType();
+				bubble3 = gameField[i - 1][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation C3 detected");
+					return true;
+				}
+			}
+		}
+
+		// Situation A4
+		// .*
+		// *.
+		// .*
+		for (int i = 0; i < FIELD_SIZE_X - 1; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y - 2; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j + 1].getBubbleType();
+				bubble3 = gameField[i][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation A4 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i][j + 1].getBubbleType();
+				bubble3 = gameField[i + 1][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation B4 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i + 1][j].getBubbleType();
+				bubble2 = gameField[i][j + 1].getBubbleType();
+				bubble3 = gameField[i][j + 2].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation C4 detected");
+					return true;
+				}
+			}
+		}
+
+		// Situation D1, D3
+		// * *
+		// . *
+		// * .
+		// * *
+		for (int i = 0; i < FIELD_SIZE_X; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y - 3; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i][j + 1].getBubbleType();
+				bubble3 = gameField[i][j + 3].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation D1 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i][j + 2].getBubbleType();
+				bubble3 = gameField[i][j + 3].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation D3 detected");
+					return true;
+				}
+			}
+		}
+
+		// Situation D2, D4
+		// *.**
+		// **.*
+		for (int i = 0; i < FIELD_SIZE_X - 3; i++) {
+			for (int j = 0; j < FIELD_SIZE_Y; j++) {
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 2][j].getBubbleType();
+				bubble3 = gameField[i + 3][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation D2 detected");
+					return true;
+				}
+
+				bubble1 = gameField[i][j].getBubbleType();
+				bubble2 = gameField[i + 1][j].getBubbleType();
+				bubble3 = gameField[i + 3][j].getBubbleType();
+
+				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
+					System.out.println("Situation D4 detected");
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

@@ -14,7 +14,7 @@ public class GameConstants {
 	
 	// Game settings
 	public static int GOAL = 3;
-	public static final int BUBBLE_TYPES = 5;
+	public static final int BUBBLE_TYPES = 6;
 	public static int SCORE_INCREMENT = 50;
 	
 }
