@@ -15,8 +15,8 @@ public class ActorFx extends Actor {
 
 	public ActorFx() {
 		ParticleEffect bombEffect = new ParticleEffect();
-		bombEffect.load(Gdx.files.internal("fx/explosion.p"),
-				Gdx.files.internal("data"));
+		bombEffect.load(Gdx.files.internal("fx/explosion2.p"),
+				Gdx.files.internal("fx"));
 		bombEffectPool = new ParticleEffectPool(bombEffect, 1, 2);
 
 		//addFX(0, 0);
