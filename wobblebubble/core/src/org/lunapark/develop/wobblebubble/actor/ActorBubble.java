@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.screen.ScreenGame;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -20,7 +21,7 @@ public class ActorBubble extends Actor {
 	private int actorWidth, actorHeight;
 	private boolean fired = false;
 	private ActorTable actorTable;
-	private int bubbleType;
+	private int bubbleType;	
 
 	public ActorBubble(int bubbleType) {
 		this.setBubbleType(bubbleType);
@@ -43,10 +44,9 @@ public class ActorBubble extends Actor {
 		return fired;
 	}
 
-	public void setFired() {
+	public void setFired() {		
 		fired = true;
-		setVisible(false);
-		//setPosition(getX(), getY() - 1800);
+		setVisible(false);		
 				
 		Random random = new Random();
 		bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);

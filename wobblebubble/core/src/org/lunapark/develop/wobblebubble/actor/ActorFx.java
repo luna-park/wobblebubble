@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class ActorFx extends Actor {
 
 	private ParticleEffectPool bombEffectPool;
-	Array<PooledEffect> effects = new Array<PooledEffect>();
+	private Array<PooledEffect> effects = new Array<PooledEffect>();
 
 	public ActorFx() {
 		ParticleEffect bombEffect = new ParticleEffect();
@@ -39,6 +39,10 @@ public class ActorFx extends Actor {
 		PooledEffect effect = bombEffectPool.obtain();
 		effect.setPosition(x, y);
 		effects.add(effect);
+	}
+	
+	public int getFXquantity() {
+		return effects.size;
 	}
 
 }

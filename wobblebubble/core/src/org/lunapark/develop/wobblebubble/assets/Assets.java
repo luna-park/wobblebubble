@@ -12,13 +12,12 @@ public class Assets {
 	// Textures
 	public static Texture txGameBackground, txMainMenuBackground;
 	public static Texture txBubble01, txBubble02, txBubble03, txBubble04,
-			txBubble05, txBubble06;
+			txBubble05, txBubble06, txBonus;
 
-	// SFX
-	public static Sound sfxNewGame;
-	public static Sound sfxTwang;
-	public static Sound sfxHiscore;
+	// SFX	
+	public static Sound sfxTwang;	
 	public static Sound sfxImpact;
+	public static Sound sfxHarp;
 
 	// Arrays
 	public static Texture[] txBubbles;
@@ -35,12 +34,13 @@ public class Assets {
 		txGameBackground = new Texture(Gdx.files.internal("data/game_bg.png"));
 		txMainMenuBackground = new Texture(
 				Gdx.files.internal("data/main_menu_bg.png"));
+		txBonus = new Texture(
+				Gdx.files.internal("data/fedya.png"));
 
-		// Load sounds
-		sfxNewGame = Gdx.audio.newSound(Gdx.files.internal("sfx/newgame.wav"));
-		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));
-		sfxHiscore = Gdx.audio.newSound(Gdx.files.internal("sfx/hiscore.wav"));
+		// Load sounds		
+		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));		
 		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/impact.wav"));
+		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));		
 
 		// Texture arrays
 		txBubbles = new Texture[GameConstants.BUBBLE_TYPES];
