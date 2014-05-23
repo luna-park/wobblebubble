@@ -13,8 +13,10 @@ import org.lunapark.develop.wobblebubble.base.ScreenBase;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
@@ -85,19 +87,28 @@ public class ScreenGame extends ScreenBase {
 				GameConstants.SCREEN_SIZE_Y));
 
 		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setCatchBackKey(true);
 
+		InputListener inputListener = new InputListener() {
+
+			@Override
+			public boolean keyUp(InputEvent event, int keycode) {
+				// TODO Auto-generated method stub
+				if ((keycode == Keys.BACK) || (keycode == Keys.ESCAPE)) {
+					game.setScreen(new ScreenMainMenu(game));
+				}
+				return true;
+			}
+			
+		};
+		
 		gestureListener = new ActorGestureListener() {
 
 			@Override
 			public void tap(InputEvent event, float x, float y, int count,
 					int button) {
-				// XXX Delete bubble on tap
-				// ActorBubble aBubble = (ActorBubble) event.getListenerActor();
-				// System.out.println("i:" + aBubble.getActorTable().i + " j:"
-				// + aBubble.getActorTable().j + " type:"
-				// + aBubble.getBubbleType());
-				// aBubble.setFired();
-				// deleteBubble((ActorBubble) event.getListenerActor());
+				// XXX Tap on bubble
+				
 				// bigBoom();
 
 			}
@@ -127,9 +138,11 @@ public class ScreenGame extends ScreenBase {
 
 		};
 
-		Gdx.input.setInputProcessor(stage);
 		// Create bg
 		Image backgroudImage = new Image(Assets.txGameBackground);
+		
+		//
+		stage.addListener(inputListener);
 
 		// Create text labels
 		scoreText = new ActorText(String.valueOf(score));
@@ -178,6 +191,9 @@ public class ScreenGame extends ScreenBase {
 				gameField[i][j].setFired();
 			}
 		}
+
+		Assets.sfxImpact.stop();
+		Assets.sfxImpact.play();
 
 		// XXX
 		Timer.schedule(new Task() {
@@ -417,7 +433,8 @@ public class ScreenGame extends ScreenBase {
 
 			}
 
-			scoreAdd(firedIndex * 50 + firedIndex * 10);
+			scoreAdd(firedIndex * GameConstants.SCORE_INCREMENT + firedIndex
+					* GameConstants.SCORE_INCREMENT2);
 
 		}
 
@@ -746,6 +763,12 @@ public class ScreenGame extends ScreenBase {
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		// XXX keyDown
+//		if (Gdx.input.isKeyPressed(Keys.BACK)
+//				|| Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+//			game.setScreen(new ScreenMainMenu(game));
+//		}
+
 		// Draw stage
 		stage.act(delta);
 		stage.draw();
@@ -762,6 +785,5 @@ public class ScreenGame extends ScreenBase {
 	public void dispose() {
 		stage.dispose();
 		super.dispose();
-	}
-
+	}	
 }

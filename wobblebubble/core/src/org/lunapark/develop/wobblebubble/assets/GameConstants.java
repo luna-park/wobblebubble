@@ -20,6 +20,7 @@ public class GameConstants {
 	public static int GOAL = 3;
 	public static final int BUBBLE_TYPES = 6;
 	public static int SCORE_INCREMENT = 50;
+	public static int SCORE_INCREMENT2 = 10;
 	public static int SCORE_BONUS = 5000;
 	
 }

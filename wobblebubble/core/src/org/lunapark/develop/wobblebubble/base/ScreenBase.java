@@ -14,6 +14,7 @@ public class ScreenBase implements Screen {
 
 	public ScreenBase(Game game) {
 		this.game = game;
+
 	}
 
 	@Override

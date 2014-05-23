@@ -1,7 +1,7 @@
 package org.lunapark.develop.wobblebubble;
 
 import org.lunapark.develop.wobblebubble.assets.Assets;
-import org.lunapark.develop.wobblebubble.screen.MainMenu;
+import org.lunapark.develop.wobblebubble.screen.ScreenMainMenu;
 
 import com.badlogic.gdx.Game;
 
@@ -13,7 +13,7 @@ public class WobbleBubble extends Game {
 		Assets.load();
 
 		// Start 1st screen
-		setScreen(new MainMenu(this));
+		setScreen(new ScreenMainMenu(this));
 
 	}
 
