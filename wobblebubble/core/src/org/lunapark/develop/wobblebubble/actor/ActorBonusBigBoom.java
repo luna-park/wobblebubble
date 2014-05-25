@@ -9,14 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
-public class ActorBonus extends Actor {
+public class ActorBonusBigBoom extends Actor {
 	
 	private Texture texture;
 	private float x0, y0, x1 = -30, y1 = -40;
 	private float actorWidth, actorHeight;
 	
-	public ActorBonus() {
-		texture = Assets.txBonus;
+	public ActorBonusBigBoom() {
+		texture = Assets.txBonusBigBoom;
 		actorWidth = texture.getWidth();
 		actorHeight = texture.getHeight();
 		setBounds(0, 0, actorWidth, actorHeight);

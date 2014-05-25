@@ -12,12 +12,13 @@ public class Assets {
 	// Textures
 	public static Texture txGameBackground, txMainMenuBackground;
 	public static Texture txBubble01, txBubble02, txBubble03, txBubble04,
-			txBubble05, txBubble06, txBonus;
+			txBubble05, txBubble06;
+	public static Texture txBonusBigBoom, txBonusDroid;
+	public static Texture txBonusIconDroid, txbonusIconBomb;
 
 	// SFX	
-	public static Sound sfxTwang;	
-	public static Sound sfxImpact;
-	public static Sound sfxHarp;
+	public static Sound sfxTwang, sfxImpact;
+	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
 
 	// Arrays
 	public static Texture[] txBubbles;
@@ -27,6 +28,8 @@ public class Assets {
 
 	// Fonts
 	public static BitmapFont fontFoo;
+	
+	
 
 	public static void load() {
 
@@ -34,13 +37,21 @@ public class Assets {
 		txGameBackground = new Texture(Gdx.files.internal("data/game_bg.png"));
 		txMainMenuBackground = new Texture(
 				Gdx.files.internal("data/main_menu_bg.png"));
-		txBonus = new Texture(
+		txBonusBigBoom = new Texture(
 				Gdx.files.internal("data/fedya.png"));
+		txBonusDroid = new Texture(
+				Gdx.files.internal("data/droid.png"));
+		txBonusIconDroid = new Texture(
+				Gdx.files.internal("data/bonus_droid.png"));
+		txbonusIconBomb = new Texture(
+				Gdx.files.internal("data/bonus_bomb.png"));
 
 		// Load sounds		
 		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));		
-		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/impact.wav"));
-		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));		
+		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/bubblepop.wav"));
+		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));
+		sfxDroidActivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_activation.ogg"));
+		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_deactivation.ogg"));
 
 		// Texture arrays
 		txBubbles = new Texture[GameConstants.BUBBLE_TYPES];

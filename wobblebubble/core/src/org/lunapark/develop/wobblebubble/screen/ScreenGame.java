@@ -2,19 +2,22 @@ package org.lunapark.develop.wobblebubble.screen;
 
 import java.util.Random;
 
-import org.lunapark.develop.wobblebubble.actor.ActorBonus;
+import org.lunapark.develop.wobblebubble.actor.ActorBonusBigBoom;
+import org.lunapark.develop.wobblebubble.actor.ActorBonusDroid;
 import org.lunapark.develop.wobblebubble.actor.ActorBubble;
 import org.lunapark.develop.wobblebubble.actor.ActorFx;
 import org.lunapark.develop.wobblebubble.actor.ActorTable;
 import org.lunapark.develop.wobblebubble.actor.ActorText;
 import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
 import org.lunapark.develop.wobblebubble.base.ScreenBase;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -63,12 +66,15 @@ public class ScreenGame extends ScreenBase {
 
 	// Game variables
 	private boolean allowCheck = true, allowFling = true, startTheGame = false;
+	private ActorTable droidTarget = new ActorTable(0, 0); //
+	private FlingVector droidVector;
 
 	// Effects
 	private ActorFx actorFx;
 
 	// Actors
-	private ActorBonus actorBonus;
+	private ActorBonusBigBoom actorBonusBigBoom;
+	private ActorBonusDroid actorBonusDroid;
 
 	/**
 	 * Constructor
@@ -90,27 +96,29 @@ public class ScreenGame extends ScreenBase {
 		Gdx.input.setCatchBackKey(true);
 
 		InputListener inputListener = new InputListener() {
-
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
-				// TODO Auto-generated method stub
 				if ((keycode == Keys.BACK) || (keycode == Keys.ESCAPE)) {
 					game.setScreen(new ScreenMainMenu(game));
 				}
 				return true;
 			}
-			
 		};
-		
-		gestureListener = new ActorGestureListener() {
 
+		gestureListener = new ActorGestureListener() {
 			@Override
 			public void tap(InputEvent event, float x, float y, int count,
 					int button) {
 				// XXX Tap on bubble
-				
-				// bigBoom();
+				ActorBubble a = (ActorBubble) event.getListenerActor();
+				bonusBomb(a.getActorTable().i, a.getActorTable().j);
+			}
 
+			@Override
+			public boolean longPress(Actor actor, float x, float y) {
+				// XXX Long tap on bubble
+				bonusDroid();
+				return true;
 			}
 
 			@Override
@@ -120,27 +128,27 @@ public class ScreenGame extends ScreenBase {
 				startTheGame = true;
 				ActorBubble a = (ActorBubble) event.getListenerActor();
 
-				if (Math.abs(velocityX) > Math.abs(velocityY)) {
-					if (velocityX > 0) {
-						moveBubble(a, FlingVector.RIGHT);
+				if (!actorBonusDroid.isActivated()) {
+					if (Math.abs(velocityX) > Math.abs(velocityY)) {
+						if (velocityX > 0) {
+							moveBubble(a, FlingVector.RIGHT);
+						} else {
+							moveBubble(a, FlingVector.LEFT);
+						}
 					} else {
-						moveBubble(a, FlingVector.LEFT);
-					}
-				} else {
-					if (velocityY > 0) {
-						moveBubble(a, FlingVector.DOWN);
-					} else {
-						moveBubble(a, FlingVector.UP);
+						if (velocityY > 0) {
+							moveBubble(a, FlingVector.DOWN);
+						} else {
+							moveBubble(a, FlingVector.UP);
+						}
 					}
 				}
-
 			}
-
 		};
 
 		// Create bg
 		Image backgroudImage = new Image(Assets.txGameBackground);
-		
+
 		//
 		stage.addListener(inputListener);
 
@@ -153,8 +161,9 @@ public class ScreenGame extends ScreenBase {
 		// Create fx pool actor
 		actorFx = new ActorFx();
 
-		// Create bonus actor
-		actorBonus = new ActorBonus();
+		// Create bonus actors
+		actorBonusBigBoom = new ActorBonusBigBoom();
+		actorBonusDroid = new ActorBonusDroid();
 
 		// Add bg & actors to stage
 		stage.addActor(backgroudImage);
@@ -165,7 +174,8 @@ public class ScreenGame extends ScreenBase {
 		checkForProfit();
 
 		// Add bonus
-		stage.addActor(actorBonus);
+		stage.addActor(actorBonusBigBoom);
+		stage.addActor(actorBonusDroid);
 
 		// Add fx actor
 		stage.addActor(actorFx);
@@ -178,7 +188,7 @@ public class ScreenGame extends ScreenBase {
 
 		long id = Assets.sfxHarp.play();
 		Assets.sfxHarp.setPriority(id, 0);
-		actorBonus.showBonus();
+		actorBonusBigBoom.showBonus();
 
 		allowFling = false;
 		allowCheck = false;
@@ -195,7 +205,7 @@ public class ScreenGame extends ScreenBase {
 		Assets.sfxImpact.stop();
 		Assets.sfxImpact.play();
 
-		// XXX
+		// XXX Allow check and fling after big boom
 		Timer.schedule(new Task() {
 			@Override
 			public void run() {
@@ -229,10 +239,70 @@ public class ScreenGame extends ScreenBase {
 	}
 
 	/**
+	 * XXX Activate droid
+	 */
+	private void bonusDroid() {
+		if (!actorBonusDroid.isActivated())
+			actorBonusDroid.fadeIn();
+
+		// XXX Droid deactivate
+		Timer.schedule(new Task() {
+			@Override
+			public void run() {
+				if (actorBonusDroid.isActivated())
+					actorBonusDroid.fadeOut();
+			}
+		}, GameConstants.DROID_DURATION);
+	}
+
+	private void bonusDroidWork() {
+		if (allowFling && allowCheck) {
+			startTheGame = true;
+			moveBubble(gameField[droidTarget.i][droidTarget.j], droidVector);
+		}
+	}
+
+	// XXX Bomb bonus
+	private void bonusBomb(int i, int j) {
+
+		if (allowFling) {
+			int a, b, c, d;
+
+			if (i > 0)
+				a = i - 1;
+			else
+				a = i;
+
+			if (i == FIELD_SIZE_X - 1)
+				b = i;
+			else
+				b = i + 1;
+
+			if (j > 0)
+				c = j - 1;
+			else
+				c = j;
+
+			if (j == FIELD_SIZE_Y - 1)
+				d = j;
+			else
+				d = j + 1;
+
+			for (int x = a; x <= b; x++) {
+				for (int y = c; y <= d; y++) {
+					if (!gameField[x][y].isFired())
+						gameField[x][y].setFired();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Check for blank spaces
 	 */
 	private void checkSpaces() {
 
+		int fx = 0;
 		for (int i = 0; i < FIELD_SIZE_X; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
 
@@ -240,8 +310,15 @@ public class ScreenGame extends ScreenBase {
 						&& (actorFx.getFXquantity() < FIELD_SIZE_X
 								* FIELD_SIZE_Y)) {
 					actorFx.addFX(getXbyI(i) + STEP / 2, getYbyJ(j) + STEP / 2);
+					fx++;
+
 				}
 			}
+		}
+
+		if (fx > 0) {
+			scoreAdd(fx * GameConstants.SCORE_INCREMENT + fx
+					* GameConstants.SCORE_INCREMENT2);
 		}
 
 		// Check for blank spaces
@@ -255,8 +332,6 @@ public class ScreenGame extends ScreenBase {
 				// Add fired bubbles
 				for (int j = 0; j < FIELD_SIZE_Y; j++) {
 					if (gameField[i][j].isFired()) {
-						// XXX Add fx
-
 						bubblesIndexes[a] = j;
 						gameField[i][j].setPosition(gameField[i][j].getX(),
 								gameField[i][j].getY() - STEP * FIELD_SIZE_Y);
@@ -267,6 +342,7 @@ public class ScreenGame extends ScreenBase {
 				// Have fired bubbles in a column
 				if (a > 0) {
 					allowCheck = false;
+					allowFling = false;
 
 					// Add unfired bubbles
 					for (int j = 0; j < FIELD_SIZE_Y; j++) {
@@ -306,6 +382,7 @@ public class ScreenGame extends ScreenBase {
 						public void run() {
 							checkForProfit();
 							allowCheck = true;
+							allowFling = true;
 						}
 					}, GameConstants.MOVE_DURATION * 2);
 
@@ -330,6 +407,10 @@ public class ScreenGame extends ScreenBase {
 			}, GameConstants.MOVE_DURATION * 3);
 
 		}
+
+		// XXX Bonus
+		if (actorBonusDroid.isActivated())
+			bonusDroidWork();
 
 	}
 
@@ -428,16 +509,27 @@ public class ScreenGame extends ScreenBase {
 				int ii = firedTable[k].i;
 				int jj = firedTable[k].j;
 				if (!gameField[ii][jj].isFired()) {
-					gameField[ii][jj].setFired();
-				}
+					// gameField[ii][jj].setFired();
+					if (gameField[ii][jj].isBonus()) {
 
+						// XXX Bonuses
+
+						// FIXME Bomb bonus detected
+						if (gameField[ii][jj].getBonusType() == bonusType.BOMB) {
+							System.out.println("Bomb detected; i:" + ii + " j:"
+									+ jj);
+							bonusBomb(ii, jj);
+							//checkForProfit();
+						}
+
+					} else {
+						gameField[ii][jj].setFired();
+					}
+
+				}
 			}
 
-			scoreAdd(firedIndex * GameConstants.SCORE_INCREMENT + firedIndex
-					* GameConstants.SCORE_INCREMENT2);
-
 		}
-
 		return profit;
 	}
 
@@ -463,9 +555,10 @@ public class ScreenGame extends ScreenBase {
 		int bubble1;
 		int bubble2;
 		int bubble3;
-		// Situation A1
+		// Situation 1
 		// *.*
 		// .*.
+		droidVector = FlingVector.DOWN;
 		for (int i = 0; i < FIELD_SIZE_X - 2; i++) {
 			for (int j = 1; j < FIELD_SIZE_Y; j++) {
 				bubble1 = gameField[i][j].getBubbleType();
@@ -474,6 +567,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation A1 detected");
+					droidTarget.i = i + 1;
+					droidTarget.j = j - 1;
 					return true;
 				}
 
@@ -483,6 +578,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation B1 detected");
+					droidTarget.i = i;
+					droidTarget.j = j - 1;
 					return true;
 				}
 
@@ -492,6 +589,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation C1 detected");
+					droidTarget.i = i + 2;
+					droidTarget.j = j - 1;
 					return true;
 				}
 			}
@@ -500,6 +599,7 @@ public class ScreenGame extends ScreenBase {
 		// Situation A2
 		// .*.
 		// *.*
+		droidVector = FlingVector.UP;
 		for (int i = 0; i < FIELD_SIZE_X - 2; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y - 1; j++) {
 				bubble1 = gameField[i][j].getBubbleType();
@@ -508,6 +608,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation A2 detected");
+					droidTarget.i = i + 1;
+					droidTarget.j = j + 1;
 					return true;
 				}
 
@@ -517,6 +619,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation B2 detected");
+					droidTarget.i = i + 2;
+					droidTarget.j = j + 1;
 					return true;
 				}
 
@@ -526,6 +630,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation C2 detected");
+					droidTarget.i = i;
+					droidTarget.j = j + 1;
 					return true;
 				}
 			}
@@ -535,6 +641,7 @@ public class ScreenGame extends ScreenBase {
 		// .*
 		// *.
 		// .*
+		droidVector = FlingVector.RIGHT;
 		for (int i = 1; i < FIELD_SIZE_X; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y - 2; j++) {
 				bubble1 = gameField[i][j].getBubbleType();
@@ -543,6 +650,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation A3 detected");
+					droidTarget.i = i - 1;
+					droidTarget.j = j + 1;
 					return true;
 				}
 
@@ -552,6 +661,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation B3 detected");
+					droidTarget.i = i - 1;
+					droidTarget.j = j;
 					return true;
 				}
 
@@ -561,6 +672,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation C3 detected");
+					droidTarget.i = i - 1;
+					droidTarget.j = j + 2;
 					return true;
 				}
 			}
@@ -570,6 +683,7 @@ public class ScreenGame extends ScreenBase {
 		// .*
 		// *.
 		// .*
+		droidVector = FlingVector.LEFT;
 		for (int i = 0; i < FIELD_SIZE_X - 1; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y - 2; j++) {
 				bubble1 = gameField[i][j].getBubbleType();
@@ -578,6 +692,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation A4 detected");
+					droidTarget.i = i + 1;
+					droidTarget.j = j + 1;
 					return true;
 				}
 
@@ -587,6 +703,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation B4 detected");
+					droidTarget.i = i + 1;
+					droidTarget.j = j + 2;
 					return true;
 				}
 
@@ -596,6 +714,8 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation C4 detected");
+					droidTarget.i = i + 1;
+					droidTarget.j = j;
 					return true;
 				}
 			}
@@ -614,6 +734,9 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation D1 detected");
+					droidVector = FlingVector.UP;
+					droidTarget.i = i;
+					droidTarget.j = j + 3;
 					return true;
 				}
 
@@ -623,6 +746,9 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation D3 detected");
+					droidVector = FlingVector.DOWN;
+					droidTarget.i = i;
+					droidTarget.j = j;
 					return true;
 				}
 			}
@@ -639,6 +765,9 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation D2 detected");
+					droidVector = FlingVector.RIGHT;
+					droidTarget.i = i;
+					droidTarget.j = j;
 					return true;
 				}
 
@@ -648,6 +777,9 @@ public class ScreenGame extends ScreenBase {
 
 				if ((bubble1 == bubble2) && (bubble2 == bubble3)) {
 					// System.out.println("Situation D4 detected");
+					droidVector = FlingVector.LEFT;
+					droidTarget.i = i + 3;
+					droidTarget.j = j;
 					return true;
 				}
 			}
@@ -764,10 +896,10 @@ public class ScreenGame extends ScreenBase {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// XXX keyDown
-//		if (Gdx.input.isKeyPressed(Keys.BACK)
-//				|| Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-//			game.setScreen(new ScreenMainMenu(game));
-//		}
+		// if (Gdx.input.isKeyPressed(Keys.BACK)
+		// || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+		// game.setScreen(new ScreenMainMenu(game));
+		// }
 
 		// Draw stage
 		stage.act(delta);
@@ -785,5 +917,5 @@ public class ScreenGame extends ScreenBase {
 	public void dispose() {
 		stage.dispose();
 		super.dispose();
-	}	
+	}
 }

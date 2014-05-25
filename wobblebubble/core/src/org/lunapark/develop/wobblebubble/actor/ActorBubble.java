@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -21,8 +22,15 @@ public class ActorBubble extends Actor {
 	private boolean fired = false;
 	private ActorTable actorTable;
 	private int bubbleType;
+	
+	private boolean bonus = false;
+	private Random random;
+	private bonusType bubbleBonusType;
+	
 
 	public ActorBubble(int bubbleType) {
+
+		random = new Random();
 		this.setBubbleType(bubbleType);
 
 		texture = Assets.txBubbles[bubbleType];
@@ -31,12 +39,49 @@ public class ActorBubble extends Actor {
 		setBounds(0, 0, actorWidth, actorHeight);
 
 		actorTable = new ActorTable(255, 255);
+		createBonus();
+	}
+
+	private void createBonus() {
+		Random random = new Random();
+		int range = random.nextInt(100);
+		if (range < 23) {
+			bonus = true;
+			int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
+			switch (typeRange) {
+			case 0:
+				bubbleBonusType = bonusType.BOMB;
+				break;
+
+			default:
+				bubbleBonusType = bonusType.DROID;
+				break;
+			}
+			
+		} else
+			bonus = false;
 	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
+		if (bonus) {
+			Texture bonusTexture;
+			
+			switch (bubbleBonusType) {
+			case DROID:
+				bonusTexture = Assets.txBonusIconDroid;
+				break;
+
+			default:
+				bonusTexture = Assets.txbonusIconBomb;
+				break;
+			}
+			batch.draw(bonusTexture, getX(), getY(), actorWidth,
+					actorHeight);
+		}
 		texture = Assets.txBubbles[bubbleType];
 		batch.draw(texture, getX(), getY(), actorWidth, actorHeight);
+
 	}
 
 	public boolean isFired() {
@@ -46,27 +91,14 @@ public class ActorBubble extends Actor {
 	public void setFired() {
 		fired = true;
 		setVisible(false);
-
-		Random random = new Random();
+		bonus = false;
 		bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);
 	}
 
-	public void clearFired() {
-		// TODO random type
-
+	public void clearFired() {		
 		fired = false;
 		setVisible(true);
-
-		if (!isTouchable()) {
-			Timer.schedule(new Task() {
-
-				@Override
-				public void run() {
-
-				}
-			}, GameConstants.MOVE_DURATION);
-
-		}
+		createBonus();
 	}
 
 	public void moveIt(float toX, float toY) {
@@ -120,6 +152,15 @@ public class ActorBubble extends Actor {
 
 	public void setBubbleType(int bubbleType) {
 		this.bubbleType = bubbleType;
+	}
+	
+	// 
+	public boolean isBonus() {
+		return bonus;
+	}
+	
+	public bonusType getBonusType() {
+		return bubbleBonusType;
 	}
 
 }
