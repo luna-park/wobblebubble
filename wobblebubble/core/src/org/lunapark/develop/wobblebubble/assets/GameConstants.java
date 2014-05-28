@@ -27,8 +27,8 @@ public class GameConstants {
 
 	public static final int BONUS_TYPES = 2;
 	
-	public static final float DELAY_FLING = 1.5f;
-	public static final float DELAY_CHECK = 2.0f;
+	public static final float DELAY_FLING = 1.1f;
+	public static final float DELAY_CHECK = 2.5f;
 	public static final float DELAY_BOOM = 3.0f;
 
 	// Bonuses

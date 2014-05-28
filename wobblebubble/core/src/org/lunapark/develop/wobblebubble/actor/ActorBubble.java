@@ -13,8 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public class ActorBubble extends Actor {
 	private Texture texture;
@@ -22,11 +20,10 @@ public class ActorBubble extends Actor {
 	private boolean fired = false;
 	private ActorTable actorTable;
 	private int bubbleType;
-	
+
 	private boolean bonus = false;
 	private Random random;
 	private bonusType bubbleBonusType;
-	
 
 	public ActorBubble(int bubbleType) {
 
@@ -45,7 +42,7 @@ public class ActorBubble extends Actor {
 	private void createBonus() {
 		Random random = new Random();
 		int range = random.nextInt(100);
-		if (range < 23) {
+		if (range == 23) {
 			bonus = true;
 			int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
 			switch (typeRange) {
@@ -57,7 +54,7 @@ public class ActorBubble extends Actor {
 				bubbleBonusType = bonusType.DROID;
 				break;
 			}
-			
+
 		} else
 			bonus = false;
 	}
@@ -66,7 +63,7 @@ public class ActorBubble extends Actor {
 	public void draw(Batch batch, float parentAlpha) {
 		if (bonus) {
 			Texture bonusTexture;
-			
+
 			switch (bubbleBonusType) {
 			case DROID:
 				bonusTexture = Assets.txBonusIconDroid;
@@ -76,8 +73,7 @@ public class ActorBubble extends Actor {
 				bonusTexture = Assets.txbonusIconBomb;
 				break;
 			}
-			batch.draw(bonusTexture, getX(), getY(), actorWidth,
-					actorHeight);
+			batch.draw(bonusTexture, getX(), getY(), actorWidth, actorHeight);
 		}
 		texture = Assets.txBubbles[bubbleType];
 		batch.draw(texture, getX(), getY(), actorWidth, actorHeight);
@@ -95,7 +91,7 @@ public class ActorBubble extends Actor {
 		bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);
 	}
 
-	public void clearFired() {		
+	public void clearFired() {
 		fired = false;
 		setVisible(true);
 		createBonus();
@@ -153,12 +149,12 @@ public class ActorBubble extends Actor {
 	public void setBubbleType(int bubbleType) {
 		this.bubbleType = bubbleType;
 	}
-	
-	// 
+
+	//
 	public boolean isBonus() {
 		return bonus;
 	}
-	
+
 	public bonusType getBonusType() {
 		return bubbleBonusType;
 	}

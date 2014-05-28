@@ -110,8 +110,8 @@ public class ScreenGame extends ScreenBase {
 			public void tap(InputEvent event, float x, float y, int count,
 					int button) {
 				// XXX Tap on bubble
-				ActorBubble a = (ActorBubble) event.getListenerActor();
-				bonusBomb(a.getActorTable().i, a.getActorTable().j);
+				// ActorBubble a = (ActorBubble) event.getListenerActor();
+				// bonusBomb(a.getActorTable().i, a.getActorTable().j);
 			}
 
 			@Override
@@ -198,7 +198,8 @@ public class ScreenGame extends ScreenBase {
 		for (int i = 0; i < FIELD_SIZE_X; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
 
-				gameField[i][j].setFired();
+				hitBubble(i, j);
+				// gameField[i][j].setFired();
 			}
 		}
 
@@ -262,39 +263,16 @@ public class ScreenGame extends ScreenBase {
 		}
 	}
 
-	// XXX Bomb bonus
-	private void bonusBomb(int i, int j) {
-
-		if (allowFling) {
-			int a, b, c, d;
-
-			if (i > 0)
-				a = i - 1;
-			else
-				a = i;
-
-			if (i == FIELD_SIZE_X - 1)
-				b = i;
-			else
-				b = i + 1;
-
-			if (j > 0)
-				c = j - 1;
-			else
-				c = j;
-
-			if (j == FIELD_SIZE_Y - 1)
-				d = j;
-			else
-				d = j + 1;
-
-			for (int x = a; x <= b; x++) {
-				for (int y = c; y <= d; y++) {
-					if (!gameField[x][y].isFired())
-						gameField[x][y].setFired();
-				}
-			}
-		}
+	/**
+	 * Hit bubble in bubble-table
+	 * 
+	 * @param i
+	 * @param j
+	 */
+	private void hitBubble(int i, int j) {
+		gameField[i][j].setFired();
+		actorFx.addFX(getXbyI(i) + STEP / 2, getYbyJ(j) + STEP / 2);
+		scoreAdd(GameConstants.SCORE_INCREMENT + GameConstants.SCORE_INCREMENT2);
 	}
 
 	/**
@@ -302,24 +280,24 @@ public class ScreenGame extends ScreenBase {
 	 */
 	private void checkSpaces() {
 
-		int fx = 0;
-		for (int i = 0; i < FIELD_SIZE_X; i++) {
-			for (int j = 0; j < FIELD_SIZE_Y; j++) {
-
-				if (gameField[i][j].isFired()
-						&& (actorFx.getFXquantity() < FIELD_SIZE_X
-								* FIELD_SIZE_Y)) {
-					actorFx.addFX(getXbyI(i) + STEP / 2, getYbyJ(j) + STEP / 2);
-					fx++;
-
-				}
-			}
-		}
-
-		if (fx > 0) {
-			scoreAdd(fx * GameConstants.SCORE_INCREMENT + fx
-					* GameConstants.SCORE_INCREMENT2);
-		}
+		// int fx = 0;
+		// for (int i = 0; i < FIELD_SIZE_X; i++) {
+		// for (int j = 0; j < FIELD_SIZE_Y; j++) {
+		//
+		// if (gameField[i][j].isFired()
+		// && (actorFx.getFXquantity() < FIELD_SIZE_X
+		// * FIELD_SIZE_Y)) {
+		// actorFx.addFX(getXbyI(i) + STEP / 2, getYbyJ(j) + STEP / 2);
+		// fx++;
+		//
+		// }
+		// }
+		// }
+		//
+		// if (fx > 0) {
+		// scoreAdd(fx * GameConstants.SCORE_INCREMENT + fx
+		// * GameConstants.SCORE_INCREMENT2);
+		// }
 
 		// Check for blank spaces
 		if (allowCheck) {
@@ -516,8 +494,8 @@ public class ScreenGame extends ScreenBase {
 						bonusType type = gameField[ii][jj].getBonusType();
 						System.out
 								.println("i: " + ii + " j:" + jj + " " + type);
-						// FIXME Bomb bonus detected
-						if (type == bonusType.BOMB) {							
+						// XXX Bomb bonus detected
+						if (type == bonusType.BOMB) {
 							int a, b, c, d;
 
 							if (ii > 0)
@@ -541,8 +519,9 @@ public class ScreenGame extends ScreenBase {
 								d = jj + 1;
 
 							for (int x = a; x <= b; x++) {
-								for (int y = c; y <= d; y++) {									
-									firedTable[firedIndex] = new ActorTable(0, 0);
+								for (int y = c; y <= d; y++) {
+									firedTable[firedIndex] = new ActorTable(0,
+											0);
 									firedTable[firedIndex].i = x;
 									firedTable[firedIndex].j = y;
 									firedIndex++;
@@ -553,9 +532,7 @@ public class ScreenGame extends ScreenBase {
 						}
 
 					}
-
-					gameField[ii][jj].setFired();
-
+					hitBubble(ii, jj);
 				}
 			}
 
@@ -576,7 +553,7 @@ public class ScreenGame extends ScreenBase {
 	}
 
 	/**
-	 * TODO Movement available?
+	 * XXX Movement available?
 	 * 
 	 * @return
 	 */
