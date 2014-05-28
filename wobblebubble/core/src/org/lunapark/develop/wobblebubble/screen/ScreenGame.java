@@ -75,6 +75,9 @@ public class ScreenGame extends ScreenBase {
 	// Actors
 	private ActorBonusBigBoom actorBonusBigBoom;
 	private ActorBonusDroid actorBonusDroid;
+	
+	// Delay
+	private Timer.Task allowTask;
 
 	/**
 	 * Constructor
@@ -179,8 +182,32 @@ public class ScreenGame extends ScreenBase {
 
 		// Add fx actor
 		stage.addActor(actorFx);
+		
+		// Tasks
+		allowTask = new Task() {			
+			@Override
+			public void run() {
+				
+				allowCheck = true;
+				allowFling = true;
+				checkForProfit();
+			}
+		};
 	}
 
+	/**
+	 * XXX Tasks queue
+	 * @param delayTime
+	 */
+	private void taskQueue(Timer.Task task,float delayTime) {
+		if (task.isScheduled()) {
+			task.cancel();
+		}
+		
+		Timer.schedule(task, delayTime);
+	}
+	
+	
 	/**
 	 * Boom all bubbles
 	 */
@@ -207,13 +234,15 @@ public class ScreenGame extends ScreenBase {
 		Assets.sfxImpact.play();
 
 		// XXX Allow check and fling after big boom
-		Timer.schedule(new Task() {
-			@Override
-			public void run() {
-				allowFling = true;
-				allowCheck = true;
-			}
-		}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+//		Timer.schedule(new Task() {
+//			@Override
+//			public void run() {
+//				allowFling = true;
+//				allowCheck = true;
+//			}
+//		}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+		
+		taskQueue(allowTask, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
 	}
 
 	/**
@@ -246,7 +275,7 @@ public class ScreenGame extends ScreenBase {
 		if (!actorBonusDroid.isActivated())
 			actorBonusDroid.fadeIn();
 
-		// XXX Droid deactivate
+		// Droid deactivate
 		Timer.schedule(new Task() {
 			@Override
 			public void run() {
@@ -279,26 +308,7 @@ public class ScreenGame extends ScreenBase {
 	 * Check for blank spaces
 	 */
 	private void checkSpaces() {
-
-		// int fx = 0;
-		// for (int i = 0; i < FIELD_SIZE_X; i++) {
-		// for (int j = 0; j < FIELD_SIZE_Y; j++) {
-		//
-		// if (gameField[i][j].isFired()
-		// && (actorFx.getFXquantity() < FIELD_SIZE_X
-		// * FIELD_SIZE_Y)) {
-		// actorFx.addFX(getXbyI(i) + STEP / 2, getYbyJ(j) + STEP / 2);
-		// fx++;
-		//
-		// }
-		// }
-		// }
-		//
-		// if (fx > 0) {
-		// scoreAdd(fx * GameConstants.SCORE_INCREMENT + fx
-		// * GameConstants.SCORE_INCREMENT2);
-		// }
-
+		
 		// Check for blank spaces
 		if (allowCheck) {
 
@@ -354,16 +364,18 @@ public class ScreenGame extends ScreenBase {
 						gameField[i][j] = duplicate[j];
 					}
 
-					// Delay before next check
-					Timer.schedule(new Task() {
-						@Override
-						public void run() {
-							checkForProfit();
-							allowCheck = true;
-							allowFling = true;
-						}
-					}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+					// XXX Delay before next check
+//					Timer.schedule(new Task() {
+//						@Override
+//						public void run() {
+//							checkForProfit();
+//							allowCheck = true;
+//							allowFling = true;
+//						}
+//					}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
 
+					taskQueue(allowTask, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+					
 					a = 0;
 
 				}
@@ -377,6 +389,7 @@ public class ScreenGame extends ScreenBase {
 			allowFling = false;
 			allowCheck = false;
 
+			// XXX Delay before big boom
 			Timer.schedule(new Task() {
 				@Override
 				public void run() {
@@ -386,7 +399,7 @@ public class ScreenGame extends ScreenBase {
 
 		}
 
-		// XXX Bonus
+		// XXX Droid
 		if (actorBonusDroid.isActivated())
 			bonusDroidWork();
 
@@ -413,7 +426,7 @@ public class ScreenGame extends ScreenBase {
 	}
 
 	/**
-	 * TODO Check for profit
+	 * Check for profit
 	 */
 	private boolean checkForProfit() {
 
@@ -494,7 +507,7 @@ public class ScreenGame extends ScreenBase {
 						bonusType type = gameField[ii][jj].getBonusType();
 						System.out
 								.println("i: " + ii + " j:" + jj + " " + type);
-						// XXX Bomb bonus detected
+						// Bomb bonus
 						if (type == bonusType.BOMB) {
 							int a, b, c, d;
 
@@ -851,6 +864,8 @@ public class ScreenGame extends ScreenBase {
 			final int fj = j;
 			final int fk = k;
 			final int fl = l;
+			
+			// XXX Delay before swap back bubbles
 			Timer.schedule(new Task() {
 
 				@Override
@@ -901,12 +916,6 @@ public class ScreenGame extends ScreenBase {
 		// Clear screen
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// XXX keyDown
-		// if (Gdx.input.isKeyPressed(Keys.BACK)
-		// || Gdx.input.isKeyPressed(Keys.ESCAPE)) {
-		// game.setScreen(new ScreenMainMenu(game));
-		// }
 
 		// Draw stage
 		stage.act(delta);
