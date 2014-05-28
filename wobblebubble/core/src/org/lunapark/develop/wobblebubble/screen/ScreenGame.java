@@ -212,7 +212,7 @@ public class ScreenGame extends ScreenBase {
 				allowFling = true;
 				allowCheck = true;
 			}
-		}, GameConstants.MOVE_DURATION * 2);
+		}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class ScreenGame extends ScreenBase {
 							allowCheck = true;
 							allowFling = true;
 						}
-					}, GameConstants.MOVE_DURATION * 2);
+					}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
 
 					a = 0;
 
@@ -404,7 +404,7 @@ public class ScreenGame extends ScreenBase {
 				public void run() {
 					bigBoom();
 				}
-			}, GameConstants.MOVE_DURATION * 3);
+			}, GameConstants.MOVE_DURATION * GameConstants.DELAY_BOOM);
 
 		}
 
@@ -441,7 +441,7 @@ public class ScreenGame extends ScreenBase {
 
 		boolean profit = false;
 
-		ActorTable[] firedTable = new ActorTable[FIELD_SIZE_X * FIELD_SIZE_Y];
+		ActorTable[] firedTable = new ActorTable[200];
 		int firedIndex = 0;
 
 		// Find 3 in a row
@@ -509,22 +509,52 @@ public class ScreenGame extends ScreenBase {
 				int ii = firedTable[k].i;
 				int jj = firedTable[k].j;
 				if (!gameField[ii][jj].isFired()) {
-					// gameField[ii][jj].setFired();
+
 					if (gameField[ii][jj].isBonus()) {
 
 						// XXX Bonuses
-
+						bonusType type = gameField[ii][jj].getBonusType();
+						System.out
+								.println("i: " + ii + " j:" + jj + " " + type);
 						// FIXME Bomb bonus detected
-						if (gameField[ii][jj].getBonusType() == bonusType.BOMB) {
-							System.out.println("Bomb detected; i:" + ii + " j:"
-									+ jj);
-							bonusBomb(ii, jj);
-							//checkForProfit();
+						if (type == bonusType.BOMB) {							
+							int a, b, c, d;
+
+							if (ii > 0)
+								a = ii - 1;
+							else
+								a = ii;
+
+							if (ii == FIELD_SIZE_X - 1)
+								b = ii;
+							else
+								b = ii + 1;
+
+							if (jj > 0)
+								c = jj - 1;
+							else
+								c = jj;
+
+							if (jj == FIELD_SIZE_Y - 1)
+								d = jj;
+							else
+								d = jj + 1;
+
+							for (int x = a; x <= b; x++) {
+								for (int y = c; y <= d; y++) {									
+									firedTable[firedIndex] = new ActorTable(0, 0);
+									firedTable[firedIndex].i = x;
+									firedTable[firedIndex].j = y;
+									firedIndex++;
+								}
+							}
+							Assets.sfxBomb.stop();
+							Assets.sfxBomb.play(0.5f);
 						}
 
-					} else {
-						gameField[ii][jj].setFired();
 					}
+
+					gameField[ii][jj].setFired();
 
 				}
 			}
@@ -854,7 +884,7 @@ public class ScreenGame extends ScreenBase {
 
 					allowFling = true;
 				}
-			}, GameConstants.MOVE_DURATION * 1.1f);
+			}, GameConstants.MOVE_DURATION * GameConstants.DELAY_FLING);
 
 		}
 	}

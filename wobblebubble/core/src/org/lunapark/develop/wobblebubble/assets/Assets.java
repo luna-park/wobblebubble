@@ -17,7 +17,7 @@ public class Assets {
 	public static Texture txBonusIconDroid, txbonusIconBomb;
 
 	// SFX	
-	public static Sound sfxTwang, sfxImpact;
+	public static Sound sfxTwang, sfxImpact, sfxBomb;
 	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
 
 	// Arrays
@@ -49,6 +49,7 @@ public class Assets {
 		// Load sounds		
 		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));		
 		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/bubblepop.wav"));
+		sfxBomb = Gdx.audio.newSound(Gdx.files.internal("sfx/bomb.wav"));
 		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));
 		sfxDroidActivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_activation.ogg"));
 		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_deactivation.ogg"));
