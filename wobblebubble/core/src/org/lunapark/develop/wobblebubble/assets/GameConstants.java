@@ -16,7 +16,7 @@ public class GameConstants {
 	public static final float BONUS_IDLE = 1.0f;
 	public static final float BONUS_FADE_OUT = 0.2f;
 
-	public static final float DROID_DURATION = 60.0f;
+	public static final float DROID_DURATION = 10.0f;
 
 	// Game settings
 	public static int GOAL = 3;
@@ -25,15 +25,17 @@ public class GameConstants {
 	public static int SCORE_INCREMENT2 = 10;
 	public static int SCORE_BONUS = 5000;
 
-	public static final int BONUS_TYPES = 2;
-	
-	public static final float DELAY_FLING = 1.1f;
+	public static final float DELAY_FLING = 1.2f;
 	public static final float DELAY_CHECK = 2.0f;
 	public static final float DELAY_BOOM = 3.0f;
 
 	// Bonuses
+	public static final int BONUS_TYPES = 2;
+
 	public static enum bonusType {
 		DROID, BOMB
 	}
+
+	public static int BONUS_RANDOM = 50;
 
 }

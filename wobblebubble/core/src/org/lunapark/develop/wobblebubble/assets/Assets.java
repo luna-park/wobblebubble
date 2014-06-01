@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
-public class Assets {	
+public class Assets {
 	// Textures
 	public static Texture txGameBackground, txMainMenuBackground;
 	public static Texture txBubble01, txBubble02, txBubble03, txBubble04,
@@ -16,7 +16,7 @@ public class Assets {
 	public static Texture txBonusBigBoom, txBonusDroid;
 	public static Texture txBonusIconDroid, txbonusIconBomb;
 
-	// SFX	
+	// SFX
 	public static Sound sfxTwang, sfxImpact, sfxBomb;
 	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
 
@@ -28,31 +28,29 @@ public class Assets {
 
 	// Fonts
 	public static BitmapFont fontFoo;
-	
-	
 
+	// //
 	public static void load() {
 
 		// Load textures
 		txGameBackground = new Texture(Gdx.files.internal("data/game_bg.png"));
 		txMainMenuBackground = new Texture(
 				Gdx.files.internal("data/main_menu_bg.png"));
-		txBonusBigBoom = new Texture(
-				Gdx.files.internal("data/fedya.png"));
-		txBonusDroid = new Texture(
-				Gdx.files.internal("data/droid.png"));
+		txBonusBigBoom = new Texture(Gdx.files.internal("data/fedya.png"));
+		txBonusDroid = new Texture(Gdx.files.internal("data/droid.png"));
 		txBonusIconDroid = new Texture(
 				Gdx.files.internal("data/bonus_droid.png"));
-		txbonusIconBomb = new Texture(
-				Gdx.files.internal("data/bonus_bomb.png"));
+		txbonusIconBomb = new Texture(Gdx.files.internal("data/bonus_bomb.png"));
 
-		// Load sounds		
-		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));		
+		// Load sounds
+		sfxTwang = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));
 		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/bubblepop.wav"));
 		sfxBomb = Gdx.audio.newSound(Gdx.files.internal("sfx/bomb.wav"));
 		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));
-		sfxDroidActivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_activation.ogg"));
-		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_deactivation.ogg"));
+		sfxDroidActivated = Gdx.audio.newSound(Gdx.files
+				.internal("sfx/droid_activation.ogg"));
+		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files
+				.internal("sfx/droid_deactivation.ogg"));
 
 		// Texture arrays
 		txBubbles = new Texture[GameConstants.BUBBLE_TYPES];
@@ -72,8 +70,8 @@ public class Assets {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("font/foo.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 32;
-		fontFoo = generator.generateFont(parameter);
+		parameter.size = 32;		
+		fontFoo = generator.generateFont(parameter);		
 		generator.dispose();
 
 	}

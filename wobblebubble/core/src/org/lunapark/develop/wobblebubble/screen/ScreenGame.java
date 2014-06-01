@@ -75,9 +75,9 @@ public class ScreenGame extends ScreenBase {
 	// Actors
 	private ActorBonusBigBoom actorBonusBigBoom;
 	private ActorBonusDroid actorBonusDroid;
-	
-	// Delay
-	private Timer.Task allowTask;
+
+	// Tasks
+	private Timer.Task allowTask, droidTask;
 
 	/**
 	 * Constructor
@@ -182,32 +182,41 @@ public class ScreenGame extends ScreenBase {
 
 		// Add fx actor
 		stage.addActor(actorFx);
-		
+
 		// Tasks
-		allowTask = new Task() {			
+		allowTask = new Task() {
 			@Override
 			public void run() {
-				
+
 				allowCheck = true;
 				allowFling = true;
 				checkForProfit();
 			}
 		};
+		
+		droidTask = new Task() {
+			
+			@Override
+			public void run() {
+				if (actorBonusDroid.isActivated())
+					actorBonusDroid.fadeOut();				
+			}
+		};
 	}
 
 	/**
-	 * XXX Tasks queue
+	 * Tasks queue
+	 * 
 	 * @param delayTime
 	 */
-	private void taskQueue(Timer.Task task,float delayTime) {
+	private void taskQueue(Timer.Task task, float delayTime) {
 		if (task.isScheduled()) {
 			task.cancel();
 		}
-		
+
 		Timer.schedule(task, delayTime);
 	}
-	
-	
+
 	/**
 	 * Boom all bubbles
 	 */
@@ -224,25 +233,15 @@ public class ScreenGame extends ScreenBase {
 
 		for (int i = 0; i < FIELD_SIZE_X; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
-
 				hitBubble(i, j);
-				// gameField[i][j].setFired();
 			}
 		}
 
 		Assets.sfxImpact.stop();
 		Assets.sfxImpact.play();
 
-		// XXX Allow check and fling after big boom
-//		Timer.schedule(new Task() {
-//			@Override
-//			public void run() {
-//				allowFling = true;
-//				allowCheck = true;
-//			}
-//		}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
-		
-		taskQueue(allowTask, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+		taskQueue(allowTask, GameConstants.MOVE_DURATION
+				* GameConstants.DELAY_CHECK);
 	}
 
 	/**
@@ -264,8 +263,6 @@ public class ScreenGame extends ScreenBase {
 			}
 		}
 
-		// scoreText.setTextValue(String.valueOf(score));
-
 	}
 
 	/**
@@ -275,18 +272,12 @@ public class ScreenGame extends ScreenBase {
 		if (!actorBonusDroid.isActivated())
 			actorBonusDroid.fadeIn();
 
-		// Droid deactivate
-		Timer.schedule(new Task() {
-			@Override
-			public void run() {
-				if (actorBonusDroid.isActivated())
-					actorBonusDroid.fadeOut();
-			}
-		}, GameConstants.DROID_DURATION);
+		taskQueue(droidTask, GameConstants.DROID_DURATION);
+		
 	}
 
 	private void bonusDroidWork() {
-		if (allowFling && allowCheck) {
+		if (allowFling && allowCheck && actorBonusDroid.isActivated()) {
 			startTheGame = true;
 			moveBubble(gameField[droidTarget.i][droidTarget.j], droidVector);
 		}
@@ -308,7 +299,7 @@ public class ScreenGame extends ScreenBase {
 	 * Check for blank spaces
 	 */
 	private void checkSpaces() {
-		
+
 		// Check for blank spaces
 		if (allowCheck) {
 
@@ -365,17 +356,19 @@ public class ScreenGame extends ScreenBase {
 					}
 
 					// XXX Delay before next check
-//					Timer.schedule(new Task() {
-//						@Override
-//						public void run() {
-//							checkForProfit();
-//							allowCheck = true;
-//							allowFling = true;
-//						}
-//					}, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
+					// Timer.schedule(new Task() {
+					// @Override
+					// public void run() {
+					// checkForProfit();
+					// allowCheck = true;
+					// allowFling = true;
+					// }
+					// }, GameConstants.MOVE_DURATION *
+					// GameConstants.DELAY_CHECK);
 
-					taskQueue(allowTask, GameConstants.MOVE_DURATION * GameConstants.DELAY_CHECK);
-					
+					taskQueue(allowTask, GameConstants.MOVE_DURATION
+							* GameConstants.DELAY_CHECK);
+
 					a = 0;
 
 				}
@@ -864,7 +857,7 @@ public class ScreenGame extends ScreenBase {
 			final int fj = j;
 			final int fk = k;
 			final int fl = l;
-			
+
 			// XXX Delay before swap back bubbles
 			Timer.schedule(new Task() {
 
@@ -933,5 +926,17 @@ public class ScreenGame extends ScreenBase {
 	public void dispose() {
 		stage.dispose();
 		super.dispose();
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		super.pause();
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		super.resume();
 	}
 }

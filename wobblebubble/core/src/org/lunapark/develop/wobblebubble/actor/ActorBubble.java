@@ -41,7 +41,7 @@ public class ActorBubble extends Actor {
 
 	private void createBonus() {
 		Random random = new Random();
-		int range = random.nextInt(100);
+		int range = random.nextInt(GameConstants.BONUS_RANDOM);
 		if (range == 23) {
 			bonus = true;
 			int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
