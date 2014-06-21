@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class ScreenMainMenu extends ScreenBase {
@@ -48,10 +50,17 @@ public class ScreenMainMenu extends ScreenBase {
 		InputListener listener = new InputListener() {
 
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
+			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub
 				game.setScreen(new ScreenGame(game));
+			}
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				
 				return true;
 			}
 
@@ -66,9 +75,18 @@ public class ScreenMainMenu extends ScreenBase {
 
 		};
 
-		stage.addListener(listener);
+		//stage.addListener(listener);
 
 		stage.addActor(backgroudImage);
+		
+		
+		// Skin
+		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+		TextButton button = new TextButton("Start game", skin, "default");
+		button.setPosition(100, 100);
+		button.addListener(listener);
+		stage.addActor(button);
+		
 	}
 
 	@Override

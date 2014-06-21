@@ -118,8 +118,7 @@ public class ScreenGame extends ScreenBase {
 			}
 
 			@Override
-			public boolean longPress(Actor actor, float x, float y) {
-				// XXX Long tap on bubble
+			public boolean longPress(Actor actor, float x, float y) {				
 				bonusDroid();
 				return true;
 			}
@@ -175,13 +174,13 @@ public class ScreenGame extends ScreenBase {
 		// Create field
 		createField();
 		checkForProfit();
+		
+		// Add fx actor
+		stage.addActor(actorFx);
 
 		// Add bonus
 		stage.addActor(actorBonusBigBoom);
 		stage.addActor(actorBonusDroid);
-
-		// Add fx actor
-		stage.addActor(actorFx);
 
 		// Tasks
 		allowTask = new Task() {
@@ -193,13 +192,13 @@ public class ScreenGame extends ScreenBase {
 				checkForProfit();
 			}
 		};
-		
+
 		droidTask = new Task() {
-			
+
 			@Override
 			public void run() {
 				if (actorBonusDroid.isActivated())
-					actorBonusDroid.fadeOut();				
+					actorBonusDroid.fadeOut();
 			}
 		};
 	}
@@ -273,7 +272,7 @@ public class ScreenGame extends ScreenBase {
 			actorBonusDroid.fadeIn();
 
 		taskQueue(droidTask, GameConstants.DROID_DURATION);
-		
+
 	}
 
 	private void bonusDroidWork() {
@@ -356,15 +355,6 @@ public class ScreenGame extends ScreenBase {
 					}
 
 					// XXX Delay before next check
-					// Timer.schedule(new Task() {
-					// @Override
-					// public void run() {
-					// checkForProfit();
-					// allowCheck = true;
-					// allowFling = true;
-					// }
-					// }, GameConstants.MOVE_DURATION *
-					// GameConstants.DELAY_CHECK);
 
 					taskQueue(allowTask, GameConstants.MOVE_DURATION
 							* GameConstants.DELAY_CHECK);
@@ -500,6 +490,14 @@ public class ScreenGame extends ScreenBase {
 						bonusType type = gameField[ii][jj].getBonusType();
 						System.out
 								.println("i: " + ii + " j:" + jj + " " + type);
+						
+						// Score bonus
+						if (type == bonusType.SCORE) {
+							Assets.sfxBonusScore.stop();
+							Assets.sfxBonusScore.play();
+							scoreAdd(GameConstants.BONUS_SCORE_INC);
+						}
+						
 						// Bomb bonus
 						if (type == bonusType.BOMB) {
 							int a, b, c, d;
@@ -849,7 +847,7 @@ public class ScreenGame extends ScreenBase {
 
 			if ((k != i) || (l != j)) {
 				swapBubbles(aBubble, k, l);
-				Assets.sfxTwang.play();
+				Assets.sfxMove.play();
 			}
 
 			// Check profit after animation
@@ -907,7 +905,7 @@ public class ScreenGame extends ScreenBase {
 	@Override
 	public void render(float delta) {
 		// Clear screen
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// Draw stage

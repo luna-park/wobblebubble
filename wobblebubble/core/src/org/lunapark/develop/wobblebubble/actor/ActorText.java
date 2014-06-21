@@ -1,6 +1,7 @@
 package org.lunapark.develop.wobblebubble.actor;
 
 import org.lunapark.develop.wobblebubble.assets.Assets;
+import org.lunapark.develop.wobblebubble.assets.GameConstants;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,8 +24,10 @@ public class ActorText extends Actor {
 	public ActorText(CharSequence charSequence) {
 		textValue = String.valueOf(charSequence);
 		font = Assets.fontFoo;
-		font.setColor(0, 0, 0, 1);
-		//font.scale(1);
+
+		// font.setColor(0.9f, 0.9f, 0.5f, 1);
+		//font.setColor(1, 1, 1, 1);
+		// font.scale(1);
 	}
 
 	@Override

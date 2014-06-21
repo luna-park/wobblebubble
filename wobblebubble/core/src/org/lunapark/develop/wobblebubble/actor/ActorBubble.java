@@ -42,16 +42,20 @@ public class ActorBubble extends Actor {
 	private void createBonus() {
 		Random random = new Random();
 		int range = random.nextInt(GameConstants.BONUS_RANDOM);
-		if (range == 23) {
+		if (range < 2) {
 			bonus = true;
 			int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
 			switch (typeRange) {
 			case 0:
 				bubbleBonusType = bonusType.BOMB;
 				break;
+				
+			case 1:
+				bubbleBonusType = bonusType.DROID;
+				break;
 
 			default:
-				bubbleBonusType = bonusType.DROID;
+				bubbleBonusType = bonusType.SCORE;
 				break;
 			}
 
@@ -68,9 +72,17 @@ public class ActorBubble extends Actor {
 			case DROID:
 				bonusTexture = Assets.txBonusIconDroid;
 				break;
+				
+			case SCORE:
+				bonusTexture = Assets.txBonusIconScore;
+				break;
+				
+			case BOMB:
+				bonusTexture = Assets.txBonusIconBomb;
+				break;
 
 			default:
-				bonusTexture = Assets.txbonusIconBomb;
+				bonusTexture = Assets.txBonusIconScore;
 				break;
 			}
 			batch.draw(bonusTexture, getX(), getY(), actorWidth, actorHeight);
