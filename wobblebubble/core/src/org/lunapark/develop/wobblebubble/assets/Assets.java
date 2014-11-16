@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Assets {
 	// Textures
@@ -49,8 +48,8 @@ public class Assets {
 		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/bubblepop.wav"));
 		sfxBomb = Gdx.audio.newSound(Gdx.files.internal("sfx/bomb.wav"));
 		sfxHarp = Gdx.audio.newSound(Gdx.files.internal("sfx/harp.ogg"));
-		
-		sfxBonusScore = Gdx.audio.newSound(Gdx.files.internal("sfx/TWANG1.WAV"));
+
+		sfxBonusScore = Gdx.audio.newSound(Gdx.files.internal("sfx/gem.wav"));
 		
 		sfxDroidActivated = Gdx.audio.newSound(Gdx.files
 				.internal("sfx/droid_activation.ogg"));

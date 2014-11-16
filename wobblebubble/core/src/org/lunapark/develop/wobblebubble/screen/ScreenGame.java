@@ -1,18 +1,5 @@
 package org.lunapark.develop.wobblebubble.screen;
 
-import java.util.Random;
-
-import org.lunapark.develop.wobblebubble.actor.ActorBonusBigBoom;
-import org.lunapark.develop.wobblebubble.actor.ActorBonusDroid;
-import org.lunapark.develop.wobblebubble.actor.ActorBubble;
-import org.lunapark.develop.wobblebubble.actor.ActorFx;
-import org.lunapark.develop.wobblebubble.actor.ActorTable;
-import org.lunapark.develop.wobblebubble.actor.ActorText;
-import org.lunapark.develop.wobblebubble.assets.Assets;
-import org.lunapark.develop.wobblebubble.assets.GameConstants;
-import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
-import org.lunapark.develop.wobblebubble.base.ScreenBase;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -26,26 +13,30 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import org.lunapark.develop.wobblebubble.actor.*;
+import org.lunapark.develop.wobblebubble.assets.Assets;
+import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
+import org.lunapark.develop.wobblebubble.base.ScreenBase;
+
+import java.util.Random;
 
 public class ScreenGame extends ScreenBase {
 
 	// Constants
 
+	private static final int STEP = 64;
+	// Great random
+	Random random = new Random();
 	private int FIELD_SIZE_X = GameConstants.FIELD_SIZE_X;
 	private int FIELD_SIZE_Y = GameConstants.FIELD_SIZE_Y;
-
 	private int DELTA_X = (GameConstants.SCREEN_SIZE_X - GameConstants.CELL_SIZE
 			* GameConstants.FIELD_SIZE_X) / 2; // Lower left side of board
 	private int DELTA_Y = (GameConstants.SCREEN_SIZE_Y - GameConstants.CELL_SIZE
 			* GameConstants.FIELD_SIZE_Y) / 2;
-
-	private static final int STEP = 64;
-
+	// Initial level condition
 	private int score = 0;
-
-	// Great random
-	Random random = new Random();
-
+	private int droidParts = 0;
 	// Stage
 	private Stage stage;
 
@@ -54,34 +45,25 @@ public class ScreenGame extends ScreenBase {
 
 	// Text
 	private ActorText scoreText;
+	private ActorText droidPartsText;
 
 	// Game field
 	private ActorBubble[][] gameField = new ActorBubble[FIELD_SIZE_X][FIELD_SIZE_Y];
-
-	// Fling direction
-	private enum FlingVector {
-		RIGHT, LEFT, UP, DOWN
-
-	}
-
 	// Game variables
 	private boolean allowCheck = true, allowFling = true, startTheGame = false;
 	private ActorTable droidTarget = new ActorTable(0, 0); //
 	private FlingVector droidVector;
-
 	// Effects
 	private ActorFx actorFx;
-
 	// Actors
 	private ActorBonusBigBoom actorBonusBigBoom;
 	private ActorBonusDroid actorBonusDroid;
-
 	// Tasks
 	private Timer.Task allowTask, droidTask;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param game
 	 */
 	public ScreenGame(Game game) {
@@ -118,7 +100,7 @@ public class ScreenGame extends ScreenBase {
 			}
 
 			@Override
-			public boolean longPress(Actor actor, float x, float y) {				
+			public boolean longPress(Actor actor, float x, float y) {
 				bonusDroid();
 				return true;
 			}
@@ -156,9 +138,12 @@ public class ScreenGame extends ScreenBase {
 
 		// Create text labels
 		scoreText = new ActorText(String.valueOf(score));
+		droidPartsText = new ActorText(droidParts + "/" + GameConstants.DROID_PARTS);
+
 		scoreText.setPosition(
 				GameConstants.SCREEN_SIZE_X - Assets.fontFoo.getXHeight() * 8,
 				GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
+		droidPartsText.setPosition(8, GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
 
 		// Create fx pool actor
 		actorFx = new ActorFx();
@@ -170,11 +155,12 @@ public class ScreenGame extends ScreenBase {
 		// Add bg & actors to stage
 		stage.addActor(backgroudImage);
 		stage.addActor(scoreText);
+		stage.addActor(droidPartsText);
 
 		// Create field
 		createField();
 		checkForProfit();
-		
+
 		// Add fx actor
 		stage.addActor(actorFx);
 
@@ -205,7 +191,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Tasks queue
-	 * 
+	 *
 	 * @param delayTime
 	 */
 	private void taskQueue(Timer.Task task, float delayTime) {
@@ -284,7 +270,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Hit bubble in bubble-table
-	 * 
+	 *
 	 * @param i
 	 * @param j
 	 */
@@ -368,7 +354,7 @@ public class ScreenGame extends ScreenBase {
 
 		// Check available moves
 		if (!checkMotion() && allowCheck && allowFling) {
-			System.out.println("Нет ходов");
+			System.out.println("No moves");
 			allowFling = false;
 			allowCheck = false;
 
@@ -390,7 +376,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Convert index i to X
-	 * 
+	 *
 	 * @param i
 	 * @return
 	 */
@@ -400,7 +386,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Convert index j to Y
-	 * 
+	 *
 	 * @param j
 	 * @return
 	 */
@@ -490,14 +476,28 @@ public class ScreenGame extends ScreenBase {
 						bonusType type = gameField[ii][jj].getBonusType();
 						System.out
 								.println("i: " + ii + " j:" + jj + " " + type);
-						
+
+						// Droid part bonus
+						if (type == bonusType.DROID) {
+							if (droidParts < GameConstants.DROID_PARTS - 1) {
+								droidParts++;
+								droidPartsText.setTextValue(String.valueOf(droidParts) + "/" + GameConstants.DROID_PARTS);
+							} else {
+								droidParts = 0;
+								droidPartsText.setTextValue(String.valueOf(droidParts) + "/" + GameConstants.DROID_PARTS);
+								bonusDroid();
+							}
+
+
+						}
+
 						// Score bonus
 						if (type == bonusType.SCORE) {
 							Assets.sfxBonusScore.stop();
 							Assets.sfxBonusScore.play();
 							scoreAdd(GameConstants.BONUS_SCORE_INC);
 						}
-						
+
 						// Bomb bonus
 						if (type == bonusType.BOMB) {
 							int a, b, c, d;
@@ -546,7 +546,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Add score and display
-	 * 
+	 *
 	 * @param increment
 	 */
 	public void scoreAdd(int increment) {
@@ -558,7 +558,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * XXX Movement available?
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean checkMotion() {
@@ -801,7 +801,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Move bubble
-	 * 
+	 *
 	 * @param aBubble
 	 */
 	private void moveBubble(ActorBubble aBubble, FlingVector flingVector) {
@@ -815,34 +815,34 @@ public class ScreenGame extends ScreenBase {
 			int l = j;
 
 			switch (flingVector) {
-			case RIGHT:
-				if (i < FIELD_SIZE_X - 1) {
-					k = i + 1;
-					l = j;
-				}
-				break;
+				case RIGHT:
+					if (i < FIELD_SIZE_X - 1) {
+						k = i + 1;
+						l = j;
+					}
+					break;
 
-			case LEFT:
-				if (i > 0) {
-					k = i - 1;
-					l = j;
-				}
-				break;
-			case UP:
-				if (j > 0) {
-					k = i;
-					l = j - 1;
-				}
-				break;
-			case DOWN:
-				if (j < FIELD_SIZE_Y - 1) {
-					k = i;
-					l = j + 1;
-				}
-				break;
+				case LEFT:
+					if (i > 0) {
+						k = i - 1;
+						l = j;
+					}
+					break;
+				case UP:
+					if (j > 0) {
+						k = i;
+						l = j - 1;
+					}
+					break;
+				case DOWN:
+					if (j < FIELD_SIZE_Y - 1) {
+						k = i;
+						l = j + 1;
+					}
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 			if ((k != i) || (l != j)) {
@@ -874,7 +874,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * Swap bubbles positions
-	 * 
+	 *
 	 * @param aBubble
 	 *            - target bubble
 	 * @param k
@@ -918,7 +918,7 @@ public class ScreenGame extends ScreenBase {
 
 	/**
 	 * TODO Dispose
-	 * 
+	 *
 	 */
 	@Override
 	public void dispose() {
@@ -936,5 +936,11 @@ public class ScreenGame extends ScreenBase {
 	public void resume() {
 		// TODO Auto-generated method stub
 		super.resume();
+	}
+
+	// Fling direction
+	private enum FlingVector {
+		RIGHT, LEFT, UP, DOWN
+
 	}
 }
