@@ -1,6 +1,7 @@
 package org.lunapark.develop.wobblebubble.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -11,14 +12,16 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 public class Assets {
 	// Textures
 	public static Texture txGameBackground, txMainMenuBackground;
-	public static Texture txBubble01, txBubble02, txBubble03, txBubble04,
-			txBubble05, txBubble06;
+	public static Texture txBtnPlay, txBtnQuit;
 	public static Texture txBonusBigBoom, txBonusDroid;
 	public static Texture txBonusIconDroid, txBonusIconBomb, txBonusIconScore;
 
 	// SFX
 	public static Sound sfxMove, sfxImpact, sfxBomb, sfxBonusScore;
 	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
+
+	// Music
+	public static Music bgmMain;
 
 	// Arrays
 	public static Texture[] txBubbles;
@@ -43,6 +46,9 @@ public class Assets {
 		txBonusIconBomb = new Texture(Gdx.files.internal("data/bonus_bomb.png"));
 		txBonusIconScore = new Texture(Gdx.files.internal("data/bonus_score.png"));
 
+		txBtnPlay = new Texture(Gdx.files.internal("data/btn_play.png"));
+		txBtnQuit = new Texture(Gdx.files.internal("data/btn_quit.png"));
+
 		// Load sounds
 		sfxMove = Gdx.audio.newSound(Gdx.files.internal("sfx/move.wav"));
 		sfxImpact = Gdx.audio.newSound(Gdx.files.internal("sfx/bubblepop.wav"));
@@ -55,6 +61,9 @@ public class Assets {
 				.internal("sfx/droid_activation.ogg"));
 		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files
 				.internal("sfx/droid_deactivation.ogg"));
+
+		// Load music
+		bgmMain = Gdx.audio.newMusic(Gdx.files.internal("music/bgm01.mp3"));
 
 		// Texture arrays
 		txBubbles = new Texture[GameConstants.BUBBLE_TYPES];
@@ -77,8 +86,7 @@ public class Assets {
 		parameter.size = 32;
 		fontFoo = generator.generateFont(parameter);		
 		generator.dispose();
-		
-		//fontFoo = new BitmapFont(Gdx.files.internal("font/fontFoo.fnt"));
+
 
 	}
 

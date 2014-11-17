@@ -1,11 +1,9 @@
 package org.lunapark.develop.wobblebubble.android;
 
-import org.lunapark.develop.wobblebubble.WobbleBubble;
-
 import android.os.Bundle;
-
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import org.lunapark.develop.wobblebubble.WobbleBubble;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -25,15 +23,15 @@ public class AndroidLauncher extends AndroidApplication {
 //			// Ask the user if they want to quit
 //			new AlertDialog.Builder(this)
 //					.setIcon(android.R.drawable.ic_dialog_alert)
-//					.setTitle(getString(R.string.app_name))
-//					.setMessage(getString(R.string.title_quit))
+//					.setTitle("Wobble Bubble")
+//					.setMessage("Quit?")
 //					.setPositiveButton(android.R.string.yes,
 //							new DialogInterface.OnClickListener() {
 //								@Override
 //								public void onClick(DialogInterface dialog,
 //										int which) {
 //									// TODO Save db before exit
-//								
+//
 //									System.exit(0);
 //								}
 //

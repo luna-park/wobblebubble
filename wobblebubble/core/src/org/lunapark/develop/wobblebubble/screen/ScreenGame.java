@@ -59,7 +59,7 @@ public class ScreenGame extends ScreenBase {
 	private ActorBonusBigBoom actorBonusBigBoom;
 	private ActorBonusDroid actorBonusDroid;
 	// Tasks
-	private Timer.Task allowTask, droidTask;
+	private Timer.Task allowTask, droidTask; // Allow move, droid bonus work
 
 	/**
 	 * Constructor
@@ -101,7 +101,7 @@ public class ScreenGame extends ScreenBase {
 
 			@Override
 			public boolean longPress(Actor actor, float x, float y) {
-				bonusDroid();
+				//bonusDroid();
 				return true;
 			}
 
@@ -131,7 +131,7 @@ public class ScreenGame extends ScreenBase {
 		};
 
 		// Create bg
-		Image backgroudImage = new Image(Assets.txGameBackground);
+		Image backgroundImage = new Image(Assets.txGameBackground);
 
 		//
 		stage.addListener(inputListener);
@@ -153,7 +153,7 @@ public class ScreenGame extends ScreenBase {
 		actorBonusDroid = new ActorBonusDroid();
 
 		// Add bg & actors to stage
-		stage.addActor(backgroudImage);
+		stage.addActor(backgroundImage);
 		stage.addActor(scoreText);
 		stage.addActor(droidPartsText);
 
@@ -214,7 +214,7 @@ public class ScreenGame extends ScreenBase {
 		allowFling = false;
 		allowCheck = false;
 
-		scoreAdd(GameConstants.SCORE_BONUS);
+		scoreAdd(GameConstants.SCORE_BIG_BOOM_BONUS);
 
 		for (int i = 0; i < FIELD_SIZE_X; i++) {
 			for (int j = 0; j < FIELD_SIZE_Y; j++) {
@@ -354,7 +354,7 @@ public class ScreenGame extends ScreenBase {
 
 		// Check available moves
 		if (!checkMotion() && allowCheck && allowFling) {
-			System.out.println("No moves");
+			//System.out.println("No moves");
 			allowFling = false;
 			allowCheck = false;
 
@@ -922,6 +922,8 @@ public class ScreenGame extends ScreenBase {
 	 */
 	@Override
 	public void dispose() {
+		if (actorBonusDroid.isActivated())
+			droidTask.cancel();
 		stage.dispose();
 		super.dispose();
 	}

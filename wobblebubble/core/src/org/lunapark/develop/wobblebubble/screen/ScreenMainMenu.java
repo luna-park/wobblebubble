@@ -1,20 +1,17 @@
 package org.lunapark.develop.wobblebubble.screen;
 
-import org.lunapark.develop.wobblebubble.assets.Assets;
-import org.lunapark.develop.wobblebubble.assets.GameConstants;
-import org.lunapark.develop.wobblebubble.base.ScreenBase;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import org.lunapark.develop.wobblebubble.actor.ActorButton;
+import org.lunapark.develop.wobblebubble.assets.Assets;
+import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.base.ScreenBase;
 
 public class ScreenMainMenu extends ScreenBase {
 
@@ -45,48 +42,48 @@ public class ScreenMainMenu extends ScreenBase {
 		Gdx.input.setInputProcessor(stage);
 		Gdx.input.setCatchBackKey(true);
 		// Create bg
-		Image backgroudImage = new Image(Assets.txMainMenuBackground);
+		Image backgroundImage = new Image(Assets.txMainMenuBackground);
+		stage.addActor(backgroundImage);
 
-		InputListener listener = new InputListener() {
+		ActorButton btnPlay = new ActorButton(Assets.txBtnPlay);
+		ActorButton btnQuit = new ActorButton(Assets.txBtnQuit);
+		btnPlay.setPosition(107, 76);
+		btnQuit.setPosition(538, 76);
+		btnPlay.addListener(new InputListener() {
 
 			@Override
-			public void touchUp(InputEvent event, float x, float y,
-					int pointer, int button) {
-				// TODO Auto-generated method stub
-				// TODO Auto-generated method stub
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				Assets.sfxBonusScore.play();
+				Assets.bgmMain.stop();
 				game.setScreen(new ScreenGame(game));
 			}
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				
+									 int pointer, int button) {
 				return true;
+			}
+		});
+
+		btnQuit.addListener(new InputListener() {
+
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				Gdx.app.exit();
 			}
 
 			@Override
-			public boolean keyUp(InputEvent event, int keycode) {
-				// TODO Auto-generated method stub
-				if ((keycode == Keys.BACK) || (keycode == Keys.ESCAPE)) {
-					Gdx.app.exit();
-				}
-				return false;
+			public boolean touchDown(InputEvent event, float x, float y,
+									 int pointer, int button) {
+				return true;
 			}
+		});
 
-		};
+		stage.addActor(btnPlay);
+		stage.addActor(btnQuit);
 
-		//stage.addListener(listener);
-
-		stage.addActor(backgroudImage);
-		
-		
-		// Skin
-		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-		TextButton button = new TextButton("Start game", skin, "default");
-		button.setPosition(100, 100);
-		button.addListener(listener);
-		stage.addActor(button);
-		
+		Assets.bgmMain.stop();
+		Assets.bgmMain.play();
 	}
 
 	@Override
