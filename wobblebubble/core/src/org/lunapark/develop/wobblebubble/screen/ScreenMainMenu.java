@@ -82,7 +82,6 @@ public class ScreenMainMenu extends ScreenBase {
 		stage.addActor(btnPlay);
 		stage.addActor(btnQuit);
 
-		Assets.bgmMain.stop();
 		Assets.bgmMain.play();
 	}
 

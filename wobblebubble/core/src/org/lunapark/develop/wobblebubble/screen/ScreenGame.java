@@ -3,6 +3,7 @@ package org.lunapark.develop.wobblebubble.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,6 +29,8 @@ public class ScreenGame extends ScreenBase {
 	private static final int STEP = 64;
 	// Great random
 	Random random = new Random();
+	// Preferences
+	Preferences preferences;
 	private int FIELD_SIZE_X = GameConstants.FIELD_SIZE_X;
 	private int FIELD_SIZE_Y = GameConstants.FIELD_SIZE_Y;
 	private int DELTA_X = (GameConstants.SCREEN_SIZE_X - GameConstants.CELL_SIZE
@@ -35,7 +38,9 @@ public class ScreenGame extends ScreenBase {
 	private int DELTA_Y = (GameConstants.SCREEN_SIZE_Y - GameConstants.CELL_SIZE
 			* GameConstants.FIELD_SIZE_Y) / 2;
 	// Initial level condition
-	private int score = 0;
+	private long score = 0;
+	private long progressScore = 0;
+	private long levelNumber = 1;
 	private int droidParts = 0;
 	// Stage
 	private Stage stage;
@@ -44,15 +49,17 @@ public class ScreenGame extends ScreenBase {
 	private ActorGestureListener gestureListener;
 
 	// Text
-	private ActorText scoreText;
+	private ActorText scoreText, progressText, levelText;
 	private ActorText droidPartsText;
 
 	// Game field
 	private ActorBubble[][] gameField = new ActorBubble[FIELD_SIZE_X][FIELD_SIZE_Y];
+
 	// Game variables
 	private boolean allowCheck = true, allowFling = true, startTheGame = false;
 	private ActorTable droidTarget = new ActorTable(0, 0); //
 	private FlingVector droidVector;
+
 	// Effects
 	private ActorFx actorFx;
 	// Actors
@@ -73,6 +80,12 @@ public class ScreenGame extends ScreenBase {
 	@Override
 	public void show() {
 
+		if (preferences == null) {
+			preferences = Gdx.app.getPreferences("WobbleBubblePreferences");
+		}
+		levelNumber = preferences.getLong("Level");
+		progressScore = preferences.getLong("Progress");
+
 		// Create stage and stretch it to full screen
 		stage = new Stage(new StretchViewport(GameConstants.SCREEN_SIZE_X,
 				GameConstants.SCREEN_SIZE_Y));
@@ -84,6 +97,7 @@ public class ScreenGame extends ScreenBase {
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
 				if ((keycode == Keys.BACK) || (keycode == Keys.ESCAPE)) {
+					saveProgress();
 					game.setScreen(new ScreenMainMenu(game));
 				}
 				return true;
@@ -138,11 +152,18 @@ public class ScreenGame extends ScreenBase {
 
 		// Create text labels
 		scoreText = new ActorText(String.valueOf(score));
-		droidPartsText = new ActorText(droidParts + "/" + GameConstants.DROID_PARTS);
+		progressText = new ActorText(String.valueOf(progressScore));
+
+		levelText = new ActorText(String.valueOf(levelNumber));
 
 		scoreText.setPosition(
 				GameConstants.SCREEN_SIZE_X - Assets.fontFoo.getXHeight() * 8,
 				GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
+
+		progressText.setPosition(scoreText.getX(), scoreText.getY() - 132);
+		levelText.setPosition(scoreText.getX(), scoreText.getY() - 66);
+
+		droidPartsText = new ActorText(droidParts + "/" + GameConstants.DROID_PARTS);
 		droidPartsText.setPosition(8, GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
 
 		// Create fx pool actor
@@ -155,6 +176,9 @@ public class ScreenGame extends ScreenBase {
 		// Add bg & actors to stage
 		stage.addActor(backgroundImage);
 		stage.addActor(scoreText);
+		stage.addActor(progressText);
+		showGameProgress();
+		stage.addActor(levelText);
 		stage.addActor(droidPartsText);
 
 		// Create field
@@ -551,9 +575,41 @@ public class ScreenGame extends ScreenBase {
 	 */
 	public void scoreAdd(int increment) {
 		// Game started, score added
-		if (startTheGame)
+		if (startTheGame) {
 			score += increment;
+			progressScore += increment;
+		}
 		scoreText.setTextValue(String.valueOf(score));
+
+		showGameProgress();
+	}
+
+	/**
+	 * Calculate next level goal score
+	 *
+	 * @param level
+	 * @return
+	 */
+	private long getScoreByLevel(long level) {
+		return (long) Math.pow(GameConstants.LEVEL_BASE, level) * 5000 + GameConstants.LEVEL_INCREMENT;
+	}
+
+	private void showGameProgress() {
+		long nextLevelScore = getScoreByLevel(levelNumber);
+		if (progressScore >= nextLevelScore) {
+			levelNumber++;
+			progressScore = 0;
+		}
+		int progressPercent = Math.round((float) progressScore * 99 / nextLevelScore);
+		//System.out.println(progressScore + " / " + nextLevelScore + " = " + progressPercent);
+		progressText.setTextValue(progressPercent + "%");
+		levelText.setTextValue(String.valueOf(levelNumber));
+	}
+
+	private void saveProgress() {
+		preferences.putLong("Level", levelNumber);
+		preferences.putLong("Progress", progressScore);
+		preferences.flush();
 	}
 
 	/**
@@ -922,6 +978,7 @@ public class ScreenGame extends ScreenBase {
 	 */
 	@Override
 	public void dispose() {
+
 		if (actorBonusDroid.isActivated())
 			droidTask.cancel();
 		stage.dispose();
@@ -931,6 +988,7 @@ public class ScreenGame extends ScreenBase {
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
+		saveProgress();
 		super.pause();
 	}
 
