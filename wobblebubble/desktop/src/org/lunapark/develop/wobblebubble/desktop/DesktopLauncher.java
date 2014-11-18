@@ -11,5 +11,7 @@ public class DesktopLauncher {
 		config.width = GameConstants.SCREEN_SIZE_X;
 		config.height = GameConstants.SCREEN_SIZE_Y;
 		new LwjglApplication(new WobbleBubble(), config);
+		// Texture packer work. Run if new stuff added
+		//TexturePacker.process("data", "texture", "texture.pack");
 	}
 }

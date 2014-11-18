@@ -3,51 +3,65 @@ package org.lunapark.develop.wobblebubble.assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
-public class Assets {
-	// Textures
-	public static Texture txGameBackground, txMainMenuBackground;
-	public static Texture txBtnPlay, txBtnQuit;
-	public static Texture txBonusBigBoom, txBonusDroid;
-	public static Texture txBonusIconDroid, txBonusIconBomb, txBonusIconScore;
 
+public class Assets {
+	public static TextureAtlas.AtlasRegion txGameBackground, txMainMenuBackground,
+			txBtnPlay, txBtnQuit,
+			txBonusBigBoom, txBonusDroid,
+			txBonusIconDroid, txBonusIconBomb, txBonusIconScore;
+	// Arrays
+	public static TextureAtlas.AtlasRegion[] txBubbles;
 	// SFX
 	public static Sound sfxMove, sfxImpact, sfxBomb, sfxBonusScore;
 	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
-
 	// Music
 	public static Music bgmMain;
-
-	// Arrays
-	public static Texture[] txBubbles;
-
-	// Particles
-	public static ParticleEffect fxBoom;
-
 	// Fonts
 	public static BitmapFont fontFoo;
+	// Textures
+	private static TextureAtlas gameTextureAtlas = new TextureAtlas(Gdx.files.internal("texture/texture.pack"));
 
 	// //
 	public static void load() {
 
-		// Load textures
-		txGameBackground = new Texture(Gdx.files.internal("data/game_bg.png"));
-		txMainMenuBackground = new Texture(
-				Gdx.files.internal("data/main_menu_bg.png"));
-		txBonusBigBoom = new Texture(Gdx.files.internal("data/fedya.png"));
-		txBonusDroid = new Texture(Gdx.files.internal("data/droid.png"));
-		txBonusIconDroid = new Texture(
-				Gdx.files.internal("data/bonus_droid.png"));
-		txBonusIconBomb = new Texture(Gdx.files.internal("data/bonus_bomb.png"));
-		txBonusIconScore = new Texture(Gdx.files.internal("data/bonus_score.png"));
+		// Load texture atlas
 
-		txBtnPlay = new Texture(Gdx.files.internal("data/btn_play.png"));
-		txBtnQuit = new Texture(Gdx.files.internal("data/btn_quit.png"));
+		txMainMenuBackground = gameTextureAtlas.findRegion("main_menu_bg");
+		txGameBackground = gameTextureAtlas.findRegion("game_bg");
+		txBtnPlay = gameTextureAtlas.findRegion("btn_play");
+		txBtnQuit = gameTextureAtlas.findRegion("btn_quit");
+
+		txBonusBigBoom = gameTextureAtlas.findRegion("fedya");
+		txBonusDroid = gameTextureAtlas.findRegion("droid");
+		txBonusIconBomb = gameTextureAtlas.findRegion("bonus_bomb");
+		txBonusIconDroid = gameTextureAtlas.findRegion("bonus_droid");
+		txBonusIconScore = gameTextureAtlas.findRegion("bonus_score");
+
+		// Texture arrays
+		txBubbles = new TextureAtlas.AtlasRegion[GameConstants.BUBBLE_TYPES];
+		for (int i = 0; i < GameConstants.BUBBLE_TYPES; i++) {
+			txBubbles[i] = gameTextureAtlas.findRegion("bubble", i);
+		}
+
+		// Load textures
+//		txGameBackground = new Texture(Gdx.files.internal("data/game_bg.png"));
+//		txMainMenuBackground = new Texture(
+//				Gdx.files.internal("data/main_menu_bg.png"));
+//		txBtnPlay = new Texture(Gdx.files.internal("data/btn_play.png"));
+//		txBtnQuit = new Texture(Gdx.files.internal("data/btn_quit.png"));
+//
+//		txBonusBigBoom = new Texture(Gdx.files.internal("data/fedya.png"));
+//		txBonusDroid = new Texture(Gdx.files.internal("data/droid.png"));
+//		txBonusIconDroid = new Texture(
+//				Gdx.files.internal("data/bonus_droid.png"));
+//		txBonusIconBomb = new Texture(Gdx.files.internal("data/bonus_bomb.png"));
+//		txBonusIconScore = new Texture(Gdx.files.internal("data/bonus_score.png"));
+
 
 		// Load sounds
 		sfxMove = Gdx.audio.newSound(Gdx.files.internal("sfx/move.wav"));
@@ -65,19 +79,7 @@ public class Assets {
 		// Load music
 		bgmMain = Gdx.audio.newMusic(Gdx.files.internal("music/bgm01.mp3"));
 
-		// Texture arrays
-		txBubbles = new Texture[GameConstants.BUBBLE_TYPES];
 
-		for (int i = 0; i < GameConstants.BUBBLE_TYPES; i++) {
-			String bubbleFileName = "data/bubble_0" + i + ".png";
-			txBubbles[i] = new Texture(Gdx.files.internal(bubbleFileName));
-		}
-		// txBubbles[0] = new Texture(Gdx.files.internal("data/bubble_00.png"));
-		// txBubbles[1] = new Texture(Gdx.files.internal("data/bubble_01.png"));
-		// txBubbles[2] = new Texture(Gdx.files.internal("data/bubble_02.png"));
-		// txBubbles[3] = new Texture(Gdx.files.internal("data/bubble_03.png"));
-		// txBubbles[4] = new Texture(Gdx.files.internal("data/bubble_04.png"));
-		// txBubbles[5] = new Texture(Gdx.files.internal("data/bubble_05.png"));
 
 		// Fonts
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
@@ -86,8 +88,13 @@ public class Assets {
 		parameter.size = 32;
 		fontFoo = generator.generateFont(parameter);		
 		generator.dispose();
+	}
 
-
+	public static void dispose() {
+		/** TODO
+		 * Dispose all textures
+		 */
+		gameTextureAtlas.dispose();
 	}
 
 }

@@ -1,24 +1,23 @@
 package org.lunapark.develop.wobblebubble.actor;
 
-import org.lunapark.develop.wobblebubble.assets.Assets;
-import org.lunapark.develop.wobblebubble.assets.GameConstants;
-
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import org.lunapark.develop.wobblebubble.assets.Assets;
+import org.lunapark.develop.wobblebubble.assets.GameConstants;
 
 public class ActorBonusBigBoom extends Actor {
-	
-	private Texture texture;
+
+	private TextureAtlas.AtlasRegion texture;
 	private float x0, y0, x1 = -30, y1 = -40;
 	private float actorWidth, actorHeight;
 	
 	public ActorBonusBigBoom() {
 		texture = Assets.txBonusBigBoom;
-		actorWidth = texture.getWidth();
-		actorHeight = texture.getHeight();
+		actorWidth = texture.getRegionWidth();
+		actorHeight = texture.getRegionHeight();
 		setBounds(0, 0, actorWidth, actorHeight);
 		x0 = -actorWidth;
 		y0 = -actorHeight;

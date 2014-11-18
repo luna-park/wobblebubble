@@ -1,21 +1,20 @@
 package org.lunapark.develop.wobblebubble.actor;
 
-import java.util.Random;
-
-import org.lunapark.develop.wobblebubble.assets.Assets;
-import org.lunapark.develop.wobblebubble.assets.GameConstants;
-import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
-
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.TouchableAction;
+import org.lunapark.develop.wobblebubble.assets.Assets;
+import org.lunapark.develop.wobblebubble.assets.GameConstants;
+import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
+
+import java.util.Random;
 
 public class ActorBubble extends Actor {
-	private Texture texture;
+	private TextureAtlas.AtlasRegion texture;
 	private int actorWidth, actorHeight;
 	private boolean fired = false;
 	private ActorTable actorTable;
@@ -31,8 +30,8 @@ public class ActorBubble extends Actor {
 		this.setBubbleType(bubbleType);
 
 		texture = Assets.txBubbles[bubbleType];
-		actorWidth = texture.getWidth();
-		actorHeight = texture.getHeight();
+		actorWidth = texture.getRegionWidth();
+		actorHeight = texture.getRegionHeight();
 		setBounds(0, 0, actorWidth, actorHeight);
 
 		actorTable = new ActorTable(255, 255);
@@ -66,7 +65,7 @@ public class ActorBubble extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		if (bonus) {
-			Texture bonusTexture;
+			TextureAtlas.AtlasRegion bonusTexture;
 
 			switch (bubbleBonusType) {
 			case DROID:

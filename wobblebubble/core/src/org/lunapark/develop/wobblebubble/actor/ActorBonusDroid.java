@@ -1,24 +1,23 @@
 package org.lunapark.develop.wobblebubble.actor;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.assets.GameConstants;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-
 public class ActorBonusDroid extends Actor {
 
-	private Texture texture;
+	private TextureAtlas.AtlasRegion texture;
 	private float actorWidth, actorHeight;
 	private float x0, y0, x1 = 400, y1 = -75;
 	private boolean activated = false;
 
 	public ActorBonusDroid() {
 		texture = Assets.txBonusDroid;
-		actorWidth = texture.getWidth();
-		actorHeight = texture.getHeight();
+		actorWidth = texture.getRegionWidth();
+		actorHeight = texture.getRegionHeight();
 		setBounds(0, 0, actorWidth, actorHeight);
 		x1 = (GameConstants.SCREEN_SIZE_X - actorWidth) / 1;
 		x0 = x1;

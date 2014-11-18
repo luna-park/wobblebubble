@@ -1,0 +1,115 @@
+
+texture.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bonus_bomb
+  rotate: false
+  xy: 804, 526
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bonus_droid
+  rotate: false
+  xy: 804, 460
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bonus_score
+  rotate: false
+  xy: 870, 526
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+btn_play
+  rotate: false
+  xy: 804, 662
+  size: 171, 68
+  orig: 171, 68
+  offset: 0, 0
+  index: -1
+btn_quit
+  rotate: false
+  xy: 804, 592
+  size: 171, 68
+  orig: 171, 68
+  offset: 0, 0
+  index: -1
+bubble
+  rotate: false
+  xy: 804, 394
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 0
+bubble
+  rotate: false
+  xy: 870, 460
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 1
+bubble
+  rotate: false
+  xy: 804, 328
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 2
+bubble
+  rotate: false
+  xy: 870, 394
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 3
+bubble
+  rotate: false
+  xy: 804, 262
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 4
+bubble
+  rotate: false
+  xy: 870, 328
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 5
+fedya
+  rotate: false
+  xy: 804, 732
+  size: 215, 232
+  orig: 215, 232
+  offset: 0, 0
+  index: -1
+game_bg
+  rotate: false
+  xy: 2, 484
+  size: 800, 480
+  orig: 800, 480
+  offset: 0, 0
+  index: -1
+main_menu_bg
+  rotate: false
+  xy: 2, 2
+  size: 800, 480
+  orig: 800, 480
+  offset: 0, 0
+  index: -1
+
+texture2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+droid
+  rotate: false
+  xy: 2, 2
+  size: 223, 259
+  orig: 223, 259
+  offset: 0, 0
+  index: -1

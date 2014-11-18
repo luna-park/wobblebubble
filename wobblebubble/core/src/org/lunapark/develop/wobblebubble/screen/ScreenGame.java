@@ -116,6 +116,7 @@ public class ScreenGame extends ScreenBase {
 			@Override
 			public boolean longPress(Actor actor, float x, float y) {
 				//bonusDroid();
+				bigBoom();
 				return true;
 			}
 

@@ -1,9 +1,8 @@
 package org.lunapark.develop.wobblebubble;
 
+import com.badlogic.gdx.Game;
 import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.screen.ScreenMainMenu;
-
-import com.badlogic.gdx.Game;
 
 public class WobbleBubble extends Game {
 
@@ -17,4 +16,9 @@ public class WobbleBubble extends Game {
 
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		Assets.dispose();
+	}
 }

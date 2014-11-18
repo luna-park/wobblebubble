@@ -47,8 +47,8 @@ public class ScreenMainMenu extends ScreenBase {
 
 		ActorButton btnPlay = new ActorButton(Assets.txBtnPlay);
 		ActorButton btnQuit = new ActorButton(Assets.txBtnQuit);
-		btnPlay.setPosition(107, 76);
-		btnQuit.setPosition(538, 76);
+		btnPlay.setPosition(207, 76);
+		btnQuit.setPosition(438, 76);
 		btnPlay.addListener(new InputListener() {
 
 			@Override
