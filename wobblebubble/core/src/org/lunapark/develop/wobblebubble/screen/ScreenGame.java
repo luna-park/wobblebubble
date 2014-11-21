@@ -513,7 +513,8 @@ public class ScreenGame extends ScreenBase {
 								bonusDroid();
 							}
 
-
+							Assets.sfxDroidPart.stop();
+							Assets.sfxDroidPart.play(0.2f);
 						}
 
 						// Score bonus
@@ -558,6 +559,19 @@ public class ScreenGame extends ScreenBase {
 							}
 							Assets.sfxBomb.stop();
 							Assets.sfxBomb.play(0.5f);
+						}
+
+						// Horizontal bonus
+						if (type == bonusType.HORIZONTAL) {
+							for (int x = 0; x < FIELD_SIZE_X; x++) {
+								firedTable[firedIndex] = new ActorTable(0,
+										0);
+								firedTable[firedIndex].i = x;
+								firedTable[firedIndex].j = jj;
+								firedIndex++;
+							}
+							Assets.sfxLaser1.stop();
+							Assets.sfxLaser1.play(0.5f);
 						}
 
 					}

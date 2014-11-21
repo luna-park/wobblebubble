@@ -13,12 +13,14 @@ public class Assets {
 	public static TextureAtlas.AtlasRegion txGameBackground, txMainMenuBackground,
 			txBtnPlay, txBtnQuit,
 			txBonusBigBoom, txBonusDroid,
-			txBonusIconDroid, txBonusIconBomb, txBonusIconScore;
+			txBonusIconDroid, txBonusIconBomb, txBonusIconScore, txBonusIconHorizontal,
+			txBonusIconVertical;
 	// Arrays
 	public static TextureAtlas.AtlasRegion[] txBubbles;
 	// SFX
 	public static Sound sfxMove, sfxImpact, sfxBomb, sfxBonusScore;
-	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated;
+	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated, sfxDroidPart;
+	public static Sound sfxLaser1, sfxLaser2;
 	// Music
 	public static Music bgmMain;
 	// Fonts
@@ -41,6 +43,8 @@ public class Assets {
 		txBonusIconBomb = gameTextureAtlas.findRegion("bonus_bomb");
 		txBonusIconDroid = gameTextureAtlas.findRegion("bonus_droid");
 		txBonusIconScore = gameTextureAtlas.findRegion("bonus_score");
+		txBonusIconHorizontal = gameTextureAtlas.findRegion("bonus_horizontal");
+		txBonusIconVertical = gameTextureAtlas.findRegion("bonus_vertical");
 
 		// Texture arrays
 		txBubbles = new TextureAtlas.AtlasRegion[GameConstants.BUBBLE_TYPES];
@@ -75,6 +79,10 @@ public class Assets {
 				.internal("sfx/droid_activation.ogg"));
 		sfxDroidDeactivated = Gdx.audio.newSound(Gdx.files
 				.internal("sfx/droid_deactivation.ogg"));
+		sfxDroidPart = Gdx.audio.newSound(Gdx.files.internal("sfx/droid_part.wav"));
+
+		sfxLaser1 = Gdx.audio.newSound(Gdx.files.internal("sfx/laser1.wav"));
+		sfxLaser2 = Gdx.audio.newSound(Gdx.files.internal("sfx/laser2.wav"));
 
 		// Load music
 		bgmMain = Gdx.audio.newMusic(Gdx.files.internal("music/bgm01.mp3"));
@@ -91,10 +99,21 @@ public class Assets {
 	}
 
 	public static void dispose() {
-		/** TODO
-		 * Dispose all textures
+		/**
+		 * Dispose all textures, sounds, music
 		 */
 		gameTextureAtlas.dispose();
+		bgmMain.dispose();
+
+		sfxBonusScore.dispose();
+		sfxMove.dispose();
+		sfxBomb.dispose();
+		sfxDroidActivated.dispose();
+		sfxDroidDeactivated.dispose();
+		sfxHarp.dispose();
+		sfxImpact.dispose();
+		sfxLaser1.dispose();
+		sfxLaser2.dispose();
 	}
 
 }

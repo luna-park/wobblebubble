@@ -53,6 +53,10 @@ public class ActorBubble extends Actor {
 				bubbleBonusType = bonusType.DROID;
 				break;
 
+				case 2:
+					bubbleBonusType = bonusType.HORIZONTAL;
+					break;
+
 			default:
 				bubbleBonusType = bonusType.SCORE;
 				break;
@@ -79,6 +83,10 @@ public class ActorBubble extends Actor {
 			case BOMB:
 				bonusTexture = Assets.txBonusIconBomb;
 				break;
+
+				case HORIZONTAL:
+					bonusTexture = Assets.txBonusIconHorizontal;
+					break;
 
 			default:
 				bonusTexture = Assets.txBonusIconScore;

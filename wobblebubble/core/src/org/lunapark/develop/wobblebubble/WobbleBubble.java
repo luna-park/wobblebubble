@@ -18,7 +18,7 @@ public class WobbleBubble extends Game {
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		Assets.dispose();
+		super.dispose();
 	}
 }
