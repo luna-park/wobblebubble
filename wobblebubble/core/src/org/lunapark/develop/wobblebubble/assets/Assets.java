@@ -20,7 +20,7 @@ public class Assets {
 	// SFX
 	public static Sound sfxMove, sfxImpact, sfxBomb, sfxBonusScore;
 	public static Sound sfxHarp, sfxDroidActivated, sfxDroidDeactivated, sfxDroidPart;
-	public static Sound sfxLaser1, sfxLaser2;
+	public static Sound sfxLaser1, sfxLaser2, sfxLevelUp;
 	// Music
 	public static Music bgmMain;
 	// Fonts
@@ -84,6 +84,8 @@ public class Assets {
 		sfxLaser1 = Gdx.audio.newSound(Gdx.files.internal("sfx/laser1.wav"));
 		sfxLaser2 = Gdx.audio.newSound(Gdx.files.internal("sfx/laser2.wav"));
 
+		sfxLevelUp = Gdx.audio.newSound(Gdx.files.internal("sfx/level_up.wav"));
+
 		// Load music
 		bgmMain = Gdx.audio.newMusic(Gdx.files.internal("music/bgm01.mp3"));
 
@@ -112,8 +114,10 @@ public class Assets {
 		sfxDroidDeactivated.dispose();
 		sfxHarp.dispose();
 		sfxImpact.dispose();
+		sfxDroidPart.dispose();
 		sfxLaser1.dispose();
 		sfxLaser2.dispose();
+		sfxLevelUp.dispose();
 	}
 
 }

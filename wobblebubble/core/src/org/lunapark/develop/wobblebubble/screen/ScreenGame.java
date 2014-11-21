@@ -84,6 +84,7 @@ public class ScreenGame extends ScreenBase {
 			preferences = Gdx.app.getPreferences("WobbleBubblePreferences");
 		}
 		levelNumber = preferences.getLong("Level");
+		//levelNumber = 0;
 		progressScore = preferences.getLong("Progress");
 
 		// Create stage and stretch it to full screen
@@ -574,6 +575,19 @@ public class ScreenGame extends ScreenBase {
 							Assets.sfxLaser1.play(0.5f);
 						}
 
+						// Vertical bonus
+						if (type == bonusType.VERTICAL) {
+							for (int y = 0; y < FIELD_SIZE_Y; y++) {
+								firedTable[firedIndex] = new ActorTable(0,
+										0);
+								firedTable[firedIndex].i = ii;
+								firedTable[firedIndex].j = y;
+								firedIndex++;
+							}
+							Assets.sfxLaser2.stop();
+							Assets.sfxLaser2.play(0.5f);
+						}
+
 					}
 					hitBubble(ii, jj);
 				}
@@ -613,6 +627,7 @@ public class ScreenGame extends ScreenBase {
 		long nextLevelScore = getScoreByLevel(levelNumber);
 		if (progressScore >= nextLevelScore) {
 			levelNumber++;
+			Assets.sfxLevelUp.play(0.6f);
 			progressScore = 0;
 		}
 		int progressPercent = Math.round((float) progressScore * 99 / nextLevelScore);

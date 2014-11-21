@@ -14,168 +14,173 @@ import org.lunapark.develop.wobblebubble.assets.GameConstants.bonusType;
 import java.util.Random;
 
 public class ActorBubble extends Actor {
-	private TextureAtlas.AtlasRegion texture;
-	private int actorWidth, actorHeight;
-	private boolean fired = false;
-	private ActorTable actorTable;
-	private int bubbleType;
+    private TextureAtlas.AtlasRegion texture;
+    private int actorWidth, actorHeight;
+    private boolean fired = false;
+    private ActorTable actorTable;
+    private int bubbleType;
 
-	private boolean bonus = false;
-	private Random random;
-	private bonusType bubbleBonusType;
+    private boolean bonus = false;
+    private Random random;
+    private bonusType bubbleBonusType;
 
-	public ActorBubble(int bubbleType) {
+    public ActorBubble(int bubbleType) {
 
-		random = new Random();
-		this.setBubbleType(bubbleType);
+        random = new Random();
+        this.setBubbleType(bubbleType);
 
-		texture = Assets.txBubbles[bubbleType];
-		actorWidth = texture.getRegionWidth();
-		actorHeight = texture.getRegionHeight();
-		setBounds(0, 0, actorWidth, actorHeight);
+        texture = Assets.txBubbles[bubbleType];
+        actorWidth = texture.getRegionWidth();
+        actorHeight = texture.getRegionHeight();
+        setBounds(0, 0, actorWidth, actorHeight);
 
-		actorTable = new ActorTable(255, 255);
-		createBonus();
-	}
+        actorTable = new ActorTable(255, 255);
+        createBonus();
+    }
 
-	private void createBonus() {
-		Random random = new Random();
-		int range = random.nextInt(GameConstants.BONUS_RANDOM);
-		if (range < 2) {
-			bonus = true;
-			int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
-			switch (typeRange) {
-			case 0:
-				bubbleBonusType = bonusType.BOMB;
-				break;
-				
-			case 1:
-				bubbleBonusType = bonusType.DROID;
-				break;
+    private void createBonus() {
+        Random random = new Random();
+        int range = random.nextInt(GameConstants.BONUS_RANDOM);
+        if (range < 2) {
+            bonus = true;
+            int typeRange = random.nextInt(GameConstants.BONUS_TYPES);
+            switch (typeRange) {
+                case 0:
+                    bubbleBonusType = bonusType.BOMB;
+                    break;
 
-				case 2:
-					bubbleBonusType = bonusType.HORIZONTAL;
-					break;
+                case 1:
+                    bubbleBonusType = bonusType.DROID;
+                    break;
 
-			default:
-				bubbleBonusType = bonusType.SCORE;
-				break;
-			}
+                case 2:
+                    bubbleBonusType = bonusType.HORIZONTAL;
+                    break;
 
-		} else
-			bonus = false;
-	}
+                case 3:
+                    bubbleBonusType = bonusType.VERTICAL;
+                    break;
 
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-		if (bonus) {
-			TextureAtlas.AtlasRegion bonusTexture;
+                default:
+                    bubbleBonusType = bonusType.SCORE;
+                    break;
+            }
 
-			switch (bubbleBonusType) {
-			case DROID:
-				bonusTexture = Assets.txBonusIconDroid;
-				break;
-				
-			case SCORE:
-				bonusTexture = Assets.txBonusIconScore;
-				break;
-				
-			case BOMB:
-				bonusTexture = Assets.txBonusIconBomb;
-				break;
+        } else
+            bonus = false;
+    }
 
-				case HORIZONTAL:
-					bonusTexture = Assets.txBonusIconHorizontal;
-					break;
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        if (bonus) {
+            TextureAtlas.AtlasRegion bonusTexture;
 
-			default:
-				bonusTexture = Assets.txBonusIconScore;
-				break;
-			}
-			batch.draw(bonusTexture, getX(), getY(), actorWidth, actorHeight);
-		}
-		texture = Assets.txBubbles[bubbleType];
-		batch.draw(texture, getX(), getY(), actorWidth, actorHeight);
+            switch (bubbleBonusType) {
+                case DROID:
+                    bonusTexture = Assets.txBonusIconDroid;
+                    break;
 
-	}
+                case SCORE:
+                    bonusTexture = Assets.txBonusIconScore;
+                    break;
 
-	public boolean isFired() {
-		return fired;
-	}
+                case BOMB:
+                    bonusTexture = Assets.txBonusIconBomb;
+                    break;
 
-	public void setFired() {
-		fired = true;
-		setVisible(false);
-		bonus = false;
-		bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);
-	}
+                case HORIZONTAL:
+                    bonusTexture = Assets.txBonusIconHorizontal;
+                    break;
+                case VERTICAL:
+                    bonusTexture = Assets.txBonusIconVertical;
+                    break;
 
-	public void clearFired() {
-		fired = false;
-		setVisible(true);
-		createBonus();
-	}
+                default:
+                    bonusTexture = Assets.txBonusIconScore;
+                    break;
+            }
+            batch.draw(bonusTexture, getX(), getY(), actorWidth, actorHeight);
+        }
+        texture = Assets.txBubbles[bubbleType];
+        batch.draw(texture, getX(), getY(), actorWidth, actorHeight);
 
-	public void moveIt(float toX, float toY) {
+    }
 
-		// Move graphics
-		MoveToAction moveToAction = new MoveToAction();
-		moveToAction.setDuration(GameConstants.MOVE_DURATION);
-		moveToAction.setPosition(toX, toY);
+    public boolean isFired() {
+        return fired;
+    }
 
-		// Set touch
-		TouchableAction touchableAction = new TouchableAction();
-		touchableAction.setTouchable(Touchable.enabled);
+    public void setFired() {
+        fired = true;
+        setVisible(false);
+        bonus = false;
+        bubbleType = random.nextInt(GameConstants.BUBBLE_TYPES);
+    }
 
-		// Set untouch
-		TouchableAction untouchableAction = new TouchableAction();
-		untouchableAction.setTouchable(Touchable.disabled);
+    public void clearFired() {
+        fired = false;
+        setVisible(true);
+        createBonus();
+    }
 
-		// Create sequence - untouch, move, touch
-		SequenceAction sequenceAction = new SequenceAction(untouchableAction,
-				moveToAction, touchableAction);
+    public void moveIt(float toX, float toY) {
 
-		// Add sequence
-		addAction(sequenceAction);
-	}
+        // Move graphics
+        MoveToAction moveToAction = new MoveToAction();
+        moveToAction.setDuration(GameConstants.MOVE_DURATION);
+        moveToAction.setPosition(toX, toY);
 
-	/**
-	 * Get position in array
-	 * 
-	 * @return
-	 */
-	public ActorTable getActorTable() {
-		return actorTable;
-	}
+        // Set touch
+        TouchableAction touchableAction = new TouchableAction();
+        touchableAction.setTouchable(Touchable.enabled);
 
-	/**
-	 * Set position in 2D-array
-	 * 
-	 * @param i
-	 *            row
-	 * @param j
-	 *            column
-	 */
-	public void setActorTable(int i, int j) {
-		actorTable.i = i;
-		actorTable.j = j;
-	}
+        // Set untouch
+        TouchableAction untouchableAction = new TouchableAction();
+        untouchableAction.setTouchable(Touchable.disabled);
 
-	public int getBubbleType() {
-		return bubbleType;
-	}
+        // Create sequence - untouch, move, touch
+        SequenceAction sequenceAction = new SequenceAction(untouchableAction,
+                moveToAction, touchableAction);
 
-	public void setBubbleType(int bubbleType) {
-		this.bubbleType = bubbleType;
-	}
+        // Add sequence
+        addAction(sequenceAction);
+    }
 
-	//
-	public boolean isBonus() {
-		return bonus;
-	}
+    /**
+     * Get position in array
+     *
+     * @return
+     */
+    public ActorTable getActorTable() {
+        return actorTable;
+    }
 
-	public bonusType getBonusType() {
-		return bubbleBonusType;
-	}
+    /**
+     * Set position in 2D-array
+     *
+     * @param i row
+     * @param j column
+     */
+    public void setActorTable(int i, int j) {
+        actorTable.i = i;
+        actorTable.j = j;
+    }
+
+    public int getBubbleType() {
+        return bubbleType;
+    }
+
+    public void setBubbleType(int bubbleType) {
+        this.bubbleType = bubbleType;
+    }
+
+    //
+    public boolean isBonus() {
+        return bonus;
+    }
+
+    public bonusType getBonusType() {
+        return bubbleBonusType;
+    }
 
 }
