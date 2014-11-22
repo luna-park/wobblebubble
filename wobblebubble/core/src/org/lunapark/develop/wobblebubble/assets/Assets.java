@@ -14,7 +14,7 @@ public class Assets {
 			txBtnPlay, txBtnQuit,
 			txBonusBigBoom, txBonusDroid,
 			txBonusIconDroid, txBonusIconBomb, txBonusIconScore, txBonusIconHorizontal,
-			txBonusIconVertical;
+			txBonusIconVertical, txLaserHorizontal, txLaserVertical;
 	// Arrays
 	public static TextureAtlas.AtlasRegion[] txBubbles;
 	// SFX
@@ -45,6 +45,8 @@ public class Assets {
 		txBonusIconScore = gameTextureAtlas.findRegion("bonus_score");
 		txBonusIconHorizontal = gameTextureAtlas.findRegion("bonus_horizontal");
 		txBonusIconVertical = gameTextureAtlas.findRegion("bonus_vertical");
+		txLaserHorizontal = gameTextureAtlas.findRegion("laser_horizontal");
+		txLaserVertical = gameTextureAtlas.findRegion("laser_vertical");
 
 		// Texture arrays
 		txBubbles = new TextureAtlas.AtlasRegion[GameConstants.BUBBLE_TYPES];

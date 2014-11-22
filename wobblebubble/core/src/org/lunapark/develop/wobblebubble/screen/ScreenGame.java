@@ -33,10 +33,6 @@ public class ScreenGame extends ScreenBase {
 	Preferences preferences;
 	private int FIELD_SIZE_X = GameConstants.FIELD_SIZE_X;
 	private int FIELD_SIZE_Y = GameConstants.FIELD_SIZE_Y;
-	private int DELTA_X = (GameConstants.SCREEN_SIZE_X - GameConstants.CELL_SIZE
-			* GameConstants.FIELD_SIZE_X) / 2; // Lower left side of board
-	private int DELTA_Y = (GameConstants.SCREEN_SIZE_Y - GameConstants.CELL_SIZE
-			* GameConstants.FIELD_SIZE_Y) / 2;
 	// Initial level condition
 	private long score = 0;
 	private long progressScore = 0;
@@ -116,8 +112,8 @@ public class ScreenGame extends ScreenBase {
 
 			@Override
 			public boolean longPress(Actor actor, float x, float y) {
-				//bonusDroid();
-				bigBoom();
+				bonusDroid();
+				//bigBoom();
 				return true;
 			}
 
@@ -166,7 +162,7 @@ public class ScreenGame extends ScreenBase {
 		levelText.setPosition(scoreText.getX(), scoreText.getY() - 66);
 
 		droidPartsText = new ActorText(droidParts + "/" + GameConstants.DROID_PARTS);
-		droidPartsText.setPosition(8, GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
+		droidPartsText.setPosition(18, GameConstants.SCREEN_SIZE_Y - Assets.fontFoo.getXHeight() * 2);
 
 		// Create fx pool actor
 		actorFx = new ActorFx();
@@ -407,6 +403,8 @@ public class ScreenGame extends ScreenBase {
 	 * @return
 	 */
 	private float getXbyI(int i) {
+		int DELTA_X = (GameConstants.SCREEN_SIZE_X - GameConstants.CELL_SIZE
+				* GameConstants.FIELD_SIZE_X) / 2;
 		return i * STEP + DELTA_X;
 	}
 
@@ -417,6 +415,8 @@ public class ScreenGame extends ScreenBase {
 	 * @return
 	 */
 	private float getYbyJ(int j) {
+		int DELTA_Y = (GameConstants.SCREEN_SIZE_Y - GameConstants.CELL_SIZE
+				* GameConstants.FIELD_SIZE_Y) / 2;
 		return j * STEP + DELTA_Y;
 	}
 
@@ -571,6 +571,8 @@ public class ScreenGame extends ScreenBase {
 								firedTable[firedIndex].j = jj;
 								firedIndex++;
 							}
+							ActorLaser actorLaser = new ActorLaser(getXbyI(0), getYbyJ(jj), false);
+							stage.addActor(actorLaser);
 							Assets.sfxLaser1.stop();
 							Assets.sfxLaser1.play(0.5f);
 						}
@@ -584,6 +586,8 @@ public class ScreenGame extends ScreenBase {
 								firedTable[firedIndex].j = y;
 								firedIndex++;
 							}
+							ActorLaser actorLaser = new ActorLaser(getXbyI(ii), getYbyJ(0), true);
+							stage.addActor(actorLaser);
 							Assets.sfxLaser2.stop();
 							Assets.sfxLaser2.play(0.5f);
 						}

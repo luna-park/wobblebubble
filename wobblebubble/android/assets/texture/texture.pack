@@ -5,98 +5,98 @@ filter: Nearest,Nearest
 repeat: none
 bonus_bomb
   rotate: false
-  xy: 804, 526
+  xy: 869, 900
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 bonus_droid
   rotate: false
-  xy: 804, 460
+  xy: 804, 80
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 bonus_horizontal
   rotate: false
-  xy: 870, 526
+  xy: 869, 834
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 bonus_score
   rotate: false
-  xy: 804, 394
+  xy: 935, 900
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 bonus_vertical
   rotate: false
-  xy: 870, 460
+  xy: 804, 14
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 btn_play
   rotate: false
-  xy: 804, 662
+  xy: 804, 216
   size: 171, 68
   orig: 171, 68
   offset: 0, 0
   index: -1
 btn_quit
   rotate: false
-  xy: 804, 592
+  xy: 804, 146
   size: 171, 68
   orig: 171, 68
   offset: 0, 0
   index: -1
 bubble
   rotate: false
-  xy: 804, 328
+  xy: 870, 80
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 0
 bubble
   rotate: false
-  xy: 870, 394
+  xy: 869, 768
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 bubble
   rotate: false
-  xy: 804, 262
+  xy: 935, 834
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 bubble
   rotate: false
-  xy: 870, 328
+  xy: 870, 14
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 bubble
   rotate: false
-  xy: 804, 196
+  xy: 869, 702
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 bubble
   rotate: false
-  xy: 870, 262
+  xy: 935, 768
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 fedya
   rotate: false
-  xy: 804, 732
+  xy: 804, 286
   size: 215, 232
   orig: 215, 232
   offset: 0, 0
@@ -106,6 +106,13 @@ game_bg
   xy: 2, 484
   size: 800, 480
   orig: 800, 480
+  offset: 0, 0
+  index: -1
+laser_vertical
+  rotate: false
+  xy: 804, 520
+  size: 63, 444
+  orig: 63, 444
   offset: 0, 0
   index: -1
 main_menu_bg
@@ -125,5 +132,12 @@ droid
   xy: 2, 2
   size: 223, 259
   orig: 223, 259
+  offset: 0, 0
+  index: -1
+laser_horizontal
+  rotate: false
+  xy: 2, 263
+  size: 444, 63
+  orig: 444, 63
   offset: 0, 0
   index: -1
