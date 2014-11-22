@@ -92,7 +92,6 @@ public class Assets {
 		bgmMain = Gdx.audio.newMusic(Gdx.files.internal("music/bgm01.mp3"));
 
 
-
 		// Fonts
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
 				Gdx.files.internal("font/foo.ttf"));

@@ -11,7 +11,7 @@ public class ActorBonusDroid extends Actor {
 
 	private TextureAtlas.AtlasRegion texture;
 	private float actorWidth, actorHeight;
-	private float x0, y0, x1 = 400, y1 = -75;
+	private float x0, y0, x1 = 405, y1 = -65;
 	private boolean activated = false;
 
 	public ActorBonusDroid() {

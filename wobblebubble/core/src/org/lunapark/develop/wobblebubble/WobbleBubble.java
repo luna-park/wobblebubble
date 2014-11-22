@@ -5,7 +5,6 @@ import org.lunapark.develop.wobblebubble.assets.Assets;
 import org.lunapark.develop.wobblebubble.screen.ScreenMainMenu;
 
 public class WobbleBubble extends Game {
-
 	@Override
 	public void create() {
 		// Resources loading
@@ -13,6 +12,7 @@ public class WobbleBubble extends Game {
 
 		// Start 1st screen
 		setScreen(new ScreenMainMenu(this));
+
 
 	}
 

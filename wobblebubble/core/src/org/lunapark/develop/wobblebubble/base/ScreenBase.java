@@ -10,7 +10,7 @@ import com.badlogic.gdx.Screen;
  * 
  */
 public class ScreenBase implements Screen {
-	public Game game;
+	protected Game game;
 
 	public ScreenBase(Game game) {
 		this.game = game;

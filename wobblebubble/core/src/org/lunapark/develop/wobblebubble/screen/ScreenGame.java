@@ -28,9 +28,9 @@ public class ScreenGame extends ScreenBase {
 
 	private static final int STEP = 64;
 	// Great random
-	Random random = new Random();
+	private Random random = new Random();
 	// Preferences
-	Preferences preferences;
+	private Preferences preferences;
 	private int FIELD_SIZE_X = GameConstants.FIELD_SIZE_X;
 	private int FIELD_SIZE_Y = GameConstants.FIELD_SIZE_Y;
 	// Initial level condition
@@ -112,7 +112,7 @@ public class ScreenGame extends ScreenBase {
 
 			@Override
 			public boolean longPress(Actor actor, float x, float y) {
-				bonusDroid();
+				//bonusDroid();
 				//bigBoom();
 				return true;
 			}

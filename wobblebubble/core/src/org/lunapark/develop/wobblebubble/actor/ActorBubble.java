@@ -23,6 +23,7 @@ public class ActorBubble extends Actor {
     private boolean bonus = false;
     private Random random;
     private bonusType bubbleBonusType;
+    private long startTime;
 
     public ActorBubble(int bubbleType) {
 
@@ -39,6 +40,7 @@ public class ActorBubble extends Actor {
     }
 
     private void createBonus() {
+        startTime = System.currentTimeMillis();
         Random random = new Random();
         int range = random.nextInt(GameConstants.BONUS_RANDOM);
         if (range < 2) {
@@ -99,7 +101,8 @@ public class ActorBubble extends Actor {
                     bonusTexture = Assets.txBonusIconScore;
                     break;
             }
-            batch.draw(bonusTexture, getX(), getY(), actorWidth, actorHeight);
+            float deltaY = (float) Math.sin((System.currentTimeMillis() - startTime) / 60.606f) * 1;
+            batch.draw(bonusTexture, getX(), getY() + deltaY, actorWidth, actorHeight);
         }
         texture = Assets.txBubbles[bubbleType];
         batch.draw(texture, getX(), getY(), actorWidth, actorHeight);

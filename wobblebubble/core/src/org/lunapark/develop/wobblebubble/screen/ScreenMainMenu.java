@@ -55,6 +55,8 @@ public class ScreenMainMenu extends ScreenBase {
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				Assets.sfxBonusScore.play();
 				Assets.bgmMain.stop();
+				stage.dispose();
+
 				game.setScreen(new ScreenGame(game));
 			}
 
