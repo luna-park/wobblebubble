@@ -17,7 +17,7 @@ public class GameConstants {
 	public static final float BONUS_FADE_OUT = 0.2f;
 
 	// Droid
-	public static final float DROID_DURATION = 200.0f; // 15
+	public static final float DROID_DURATION = 300.0f; // 15
 	public static final int DROID_PARTS = 9; // activation bonus
 	public static final int BUBBLE_TYPES = 6; // Default 6
 	public static final float DELAY_FLING = 1.2f;
